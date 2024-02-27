@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style/plugins/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" type="type/text" th:href="@{/style/plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style/dist/css/adminlte.min.css}">
+    <link rel="stylesheet" th:href="@{/style/bootstrap-5.0.2-dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/style/css/common.css}">
+</head>
+
+<body>
+    <div class="hold-transition login-page">
+        <div class="login-box">
+
+            <div class="card card-outline card-primary">
+                <div class="card-header text-center">
+                    <a th:href="@{/pages/auth/index}" class="h1"><b>Admin</b>LTE</a>
+                </div>
+                <div class="card-body">
+                    <p class="login-box-msg">Sign in to start you session</p>
+
+                    <form th:action="@{/admin/loginProcess}" method="POST">
+                        <div class="input-group mb-3">
+                            <input type="email" value="" class="form-control" name="username"
+                                placeholder="Email">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-envelope"></span>
+                                </div>
+                            </div>
+                            <span class="error invalid-feedback d-flex"></span>
+                            <!-- <span class="error invalid-feedback d-flex" th:if="${#fields.hasErrors('email')}"
+                                th:errors="*{email}"></span> -->
+                        </div>
+                        <div class="input-group mb-3">
+                            <!-- <input type="password" class="form-control" name="password"
+                                th:classappend="${#fields.hasErrors('password')}? is-invalid" placeholder="Password"> -->
+                            <input type="password" class="form-control" name="password"
+                                placeholder="Password">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
+                            </div>
+                            <span class="error invalid-feedback d-flex"></span>
+                            <!-- <span class="error invalid-feedback d-flex" th:if="${#fields.hasErrors('password')}"
+                                th:errors="*{password}"></span> -->
+                        </div>
+                        <div>
+                            <div class="col-8">
+                                <div class="icheck-primary">
+                                    <input type="checkbox" name="remember" id="remember">
+                                    <label for="remember">
+                                        Remember
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-2 mb-3">
+                            <button type="submit" class="btn btn-block btn-primary" id="loginBtn">
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                    <div class="mt-2 p-3 bg-danger text-white rounded d-none">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
