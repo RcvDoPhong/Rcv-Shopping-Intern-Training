@@ -6,7 +6,6 @@
     </settings>
 
     <typeAliases>
-        <typeAlias type="com.shopping.intern.model.Employee" alias="Employee"/>
         <typeAlias type="com.shopping.intern.model.User" alias="User"/>
     </typeAliases>
 </configuration>

@@ -20,4 +20,8 @@ public interface IUserRepository {
     void deleteById(long userId);
 
     boolean loginUser(String email);
+
+    boolean checkLogin(UserLoginRequest userLoginRequest);
+
+    void storeTempValueLoginFail(UserLoginRequest userLoginRequest);
 }

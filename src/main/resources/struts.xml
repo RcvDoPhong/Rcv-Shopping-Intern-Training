@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+    <constant name="struts.devMode" value="true" />
+
+    <constant name="struts.enable.SlashesInActionNames" value="true" />
+
+    <package name="default" extends="struts-default">
+        <interceptors>
+            <interceptor class="com.shopping.intern.interceptor.AuthenticateInterceptor"
+                name="AuthenticateInterceptor" />
+            <interceptor class="com.shopping.intern.interceptor.GuestInterceptor"
+                name="GuestInterceptor" />
+            <interceptor-stack name="loginSecureStack">
+                <interceptor-ref name="GuestInterceptor" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+            <interceptor-stack name="authSecureStack">
+                <interceptor-ref name="AuthenticateInterceptor" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+        </interceptors>
+
+        <!-- <default-interceptor-ref name="loginSecureStack"></default-interceptor-ref> -->
+
+        <global-results>
+            <result name="loginRedirect" type="redirectAction">login</result>
+            <result name="homeRedirect" type="redirectAction">user/dashboard</result>
+        </global-results>
+
+        <action name="login" class="com.shopping.intern.action.LoginAction" method="loginView">
+            <interceptor-ref name="store">
+                <param name="operationMode">RETRIEVE</param>
+            </interceptor-ref>
+            <interceptor-ref name="loginSecureStack"></interceptor-ref>
+            <!-- <interceptor-ref name="defaultStack" /> -->
+            <result name="input">/WEB-INF/auth/index.jsp</result>
+            <!--Always remember to define result input when define validation input-->
+        </action>
+
+        <action name="loginAction" class="com.shopping.intern.action.LoginAction" method="login">
+            <interceptor-ref name="store">
+                <param name="operationMode">STORE</param>
+            </interceptor-ref>
+            <interceptor-ref name="loginSecureStack"></interceptor-ref>
+            <!-- <interceptor-ref name="defaultStack" /> -->
+            <result name="input" type="redirectAction">login</result>
+                <!-- <param name="actionName">login</param>
+                <param name="actionErrors">${actionErrors}</param>
+                <param name="actionMessages">${actionMessages}</param> -->
+            <!-- </result> -->
+            <result name="redirectPageResult" type="redirectAction">user/dashboard</result>
+        </action>
+
+        <action name="user/dashboard" class="com.shopping.intern.action.UserAction"
+            method="dashboard">
+            <interceptor-ref name="authSecureStack"></interceptor-ref>
+            <result name="home">/WEB-INF/auth/dashboard.jsp</result>
+        </action>
+
+        <action name="user/logout" class="com.shopping.intern.action.UserAction" method="logout">
+            <interceptor-ref name="authSecureStack"></interceptor-ref>
+            <result name="success">/WEB-INF/auth/index.jsp</result>
+        </action>
+    </package>
+</struts>
