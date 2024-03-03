@@ -16,8 +16,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.shopping.intern.action.LoginAction;
 
-public class AuthenticateInterceptor extends AbstractInterceptor implements
-        StrutsStatics {
+public class AuthenticateInterceptor implements Interceptor {
 
     private static final Log log = LogFactory.getLog(AuthenticateInterceptor.class);
     private static final String EMAIL_SESSION = "userSession";
@@ -33,7 +32,7 @@ public class AuthenticateInterceptor extends AbstractInterceptor implements
 
         final ActionContext context = invocation.getInvocationContext();
         HttpServletRequest request = (HttpServletRequest) context
-                .get(HTTP_REQUEST);
+                .get(StrutsStatics.HTTP_REQUEST);
         HttpSession session = request.getSession(true);
 
         // Is there a "user" object stored in the user's HttpSession?

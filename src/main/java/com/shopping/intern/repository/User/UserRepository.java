@@ -53,7 +53,7 @@ public class UserRepository implements IUserRepository {
     public boolean checkLogin(UserLoginRequest userLoginRequest) {
         User user = this.findByEmail(userLoginRequest.getEmail());
         if (user != null) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
             if (encoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
                 this.handleAfterLogin(user);
                 return true;
