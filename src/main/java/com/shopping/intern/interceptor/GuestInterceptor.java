@@ -34,7 +34,7 @@ public class GuestInterceptor implements Interceptor {
         Object userSession = session.getAttribute(USER_SESSION);
         if (userSession == null) {
             if (invocation.getAction().getClass().equals(LoginAction.class)) {
-                System.out.println("Check in guest interceptor: " + session.getAttribute("email"));
+                System.out.println("Check in guest interceptor: " + session.getAttribute("userSession"));
                 return invocation.invoke();
             }
             return "loginRedirect";
