@@ -26,8 +26,12 @@ public class UserService implements IUserService {
     //     return this.userRepo.existByEmail(email);
     // }
 
+    public ArrayList<User> paginate(int currentPage) {
+        return this.userRepo.findAll(true, currentPage);
+    }
+
     public ArrayList<User> findAll() {
-        return this.userRepo.findAll();
+        return this.userRepo.findAll(false, 0);
     }
 
     public User findById(long userId) {

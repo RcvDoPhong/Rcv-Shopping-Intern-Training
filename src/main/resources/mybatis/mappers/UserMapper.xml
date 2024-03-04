@@ -14,13 +14,19 @@
         <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
     </resultMap>
     <sql id="Base_Column_List">
-        user_id, user_name, email, password, is_active, is_delete, group_id,
-        updated_by, created_at, updated_at
+        mst_users.user_id, mst_users.user_name, mst_users.email, mst_users.password,
+        mst_users.is_active, mst_users.is_delete, mst_users.group_id,
+        mst_users.updated_by, mst_users.created_at, mst_users.updated_at
     </sql>
     <select id="findAll" resultType="User">
-        SELECT <include refid="Base_Column_List" />
+        SELECT <include refid="Base_Column_List" />, mst_groups.group_name as group_name, users.user_name as updated_by_user
         FROM mst_users
-        WHERE is_delete != 1
+        INNER JOIN mst_groups ON mst_users.group_id = mst_groups.group_id
+        LEFT JOIN mst_users AS users ON mst_users.updated_by = users.user_id
+        WHERE mst_users.is_delete != 1
+        <if test="paginate == true">
+            LIMIT #{currentPage}, 5
+        </if>
     </select>
     <select id="existByEmail" resultType="boolean" parameterType="String">
         SELECT EXISTS (SELECT email FROM mst_users WHERE email=${email})

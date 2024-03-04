@@ -25,6 +25,8 @@ public class User {
 
     private int groupId;
 
+    private String groupName;
+
     private String lastLoginAt = null;
 
     private String lastLoginIp = null;
@@ -35,10 +37,13 @@ public class User {
 
     private int updatedBy;
 
+    private String updatedByUser;
+
     public User() {
 
     }
 
+    // User's ID
     public int getUserId() {
         return this.userId;
     }
@@ -47,22 +52,25 @@ public class User {
         this.userId = userId;
     }
 
+    // User's Email
     public String getEmail() {
         return this.email;
-    }
-
-    public String getPassword() {
-        return this.password;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    // User's Password
+    public String getPassword() {
+        return this.password;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
+    // User's Username
     public String getUserName() {
         return this.userName;
     }
@@ -71,6 +79,7 @@ public class User {
         this.userName = user_name;
     }
 
+    // User's rememberToken
     public String getRememberToken() {
         return this.rememberToken;
     }
@@ -79,6 +88,7 @@ public class User {
         this.rememberToken = rememberToken;
     }
 
+    // User's verify Email
     public String getVerifyEmail() {
         return this.verifyEmail;
     }
@@ -87,6 +97,7 @@ public class User {
         this.verifyEmail = verifyEmail;
     }
 
+    // User's Active state
     public byte getIsActive() {
         return this.isActive;
     }
@@ -95,6 +106,7 @@ public class User {
         this.isActive = isActive;
     }
 
+    // User's Delete state
     public byte getIsDelete() {
         return this.isDelete;
     }
@@ -103,6 +115,7 @@ public class User {
         this.isDelete = isDelete;
     }
 
+    // User's Group ID
     public int getGroupId() {
         return this.groupId;
     }
@@ -111,6 +124,16 @@ public class User {
         this.groupId = groupId;
     }
 
+    // User's Group Name
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String group_name) {
+        this.groupName = group_name;
+    }
+
+    // User's Last Login Info
     public String getLastLoginAt() {
         return this.lastLoginAt;
     }
@@ -127,6 +150,7 @@ public class User {
         this.lastLoginIp = lastLoginIp;
     }
 
+    // User's Created & Updated at Timestamp
     public Date getCreatedAt() {
         return this.createdAt;
     }
@@ -143,6 +167,7 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    // User's creator/updated by someone
     public int getUpdatedBy() {
         return this.updatedBy;
     }
@@ -151,12 +176,23 @@ public class User {
         this.updatedBy = updatedBy;
     }
 
+    public String getUpdatedByUser() {
+        return updatedByUser;
+    }
+
+    public void setUpdatedByUser(String updated_by_user) {
+        this.updatedByUser = updated_by_user;
+    }
+
+    public boolean isActiveStatus() {
+        return getIsActive() == 1;
+    }
+
     // public List<User> selectAll() {
-    //     return this.userMapper.findAllUser();
+    // return this.userMapper.findAllUser();
     // }
 
     // public User findUserById(int userId) {
-    //     return this.userMapper.findUserById(userId);
+    // return this.userMapper.findUserById(userId);
     // }
 }
-

@@ -7,6 +7,9 @@ import com.shopping.intern.model.User;
 import com.shopping.intern.request.UserLoginRequest;
 
 public interface IUserService {
+
+    ArrayList<User> paginate(int currentPage);
+
     ArrayList<User> findAll();
 
     User findById(long userId);

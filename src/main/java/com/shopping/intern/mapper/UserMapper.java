@@ -10,7 +10,7 @@ import com.shopping.intern.model.User;
 @Mapper
 public interface UserMapper {
 
-    ArrayList<User> findAll();
+    ArrayList<User> findAll(boolean paginate, int currentPage);
 
     User findById(long userId);
 
