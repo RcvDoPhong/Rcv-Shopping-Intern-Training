@@ -1,6 +1,7 @@
 package com.shopping.intern.mapper;
 
-import java.util.List;
+
+import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,7 +10,7 @@ import com.shopping.intern.model.User;
 @Mapper
 public interface UserMapper {
 
-    List<User> findAll();
+    ArrayList<User> findAll();
 
     User findById(long userId);
 
