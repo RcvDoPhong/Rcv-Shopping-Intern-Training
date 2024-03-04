@@ -16,8 +16,8 @@
 
             <s:if test="totalPage <= 13">
                 <s:iterator begin="1" end="totalPage" var="page">
-                    <li class='page-item' aria-current="page">
-                        <s:if test="page == currentPage">
+                    <li class='page-item <s:if test="currentPage == #page">active</s:if>' aria-current="page">
+                        <s:if test="currentPage == #page">
                             <span class="page-link">
                                 <s:property value="page" />
                             </span>
@@ -33,8 +33,8 @@
             <s:else>
                 <s:if test="(currentPage <= 7) && (totalPage > 13)">
                     <s:iterator begin="1" end="10" var="page">
-                        <li class='page-item' aria-current="page">
-                            <s:if test="page == currentPage">
+                        <li class='page-item <s:if test="currentPage == #page">active</s:if>' aria-current="page">
+                            <s:if test="currentPage == #page">
                                 <span class="page-link">
                                     <s:property value="page" />
                                 </span>
@@ -48,10 +48,10 @@
                     </s:iterator>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
                     <a class="page-link" href="#">
-                        1
+                        ${totalPage - 1}
                     </a>
                     <a class="page-link" href="#">
-                        1
+                        ${totalPage}
                     </a>
                 </s:if>
                 <s:elseif test="(currentPage > 7) && (currentPage < (totalPage - 6))">
@@ -59,8 +59,8 @@
                     <a class="page-link" href="#">2</a>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
                     <s:iterator begin="currentPage - 2" end="currentPage + 2" var="page">
-                        <li class='page-item' aria-current="page">
-                            <s:if test="page == currentPage">
+                        <li class='page-item <s:if test="currentPage == #page">active</s:if>' aria-current="page">
+                            <s:if test="currentPage == #page">
                                 <span class="page-link">
                                     <s:property value="page" />
                                 </span>
@@ -74,10 +74,10 @@
                     </s:iterator>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
                     <a class="page-link" href="#">
-                        1
+                        ${totalPage - 1}
                     </a>
                     <a class="page-link" href="#">
-                        1
+                        ${totalPage}
                     </a>
                 </s:elseif>
                 <s:elseif test="(currentPage > (totalPage - 9)) && ((totalPage > 13))">
@@ -85,8 +85,8 @@
                     <a class="page-link" href="#">2</a>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
                     <s:iterator begin="totalPage - 9" end="totalPage">
-                        <li class='page-item' aria-current="page">
-                            <s:if test="page == currentPage">
+                        <li class='page-item <s:if test="currentPage == #page">active</s:if>' aria-current="page">
+                            <s:if test="currentPage == #page">
                                 <span class="page-link">
                                     <s:property value="page" />
                                 </span>
