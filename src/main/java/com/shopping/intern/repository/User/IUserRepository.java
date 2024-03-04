@@ -8,7 +8,7 @@ import com.shopping.intern.request.UserLoginRequest;
 
 public interface IUserRepository {
 
-    ArrayList<User> findAll();
+    ArrayList<User> findAll(boolean paginate, int currentPage);
 
     User findById(long userId);
 

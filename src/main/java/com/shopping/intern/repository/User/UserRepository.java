@@ -20,8 +20,8 @@ public class UserRepository implements IUserRepository {
         this.userMapper = userMapper;
     }
 
-    public ArrayList<User> findAll() {
-        return this.userMapper.findAll();
+    public ArrayList<User> findAll(boolean paginate, int currentPage) {
+        return this.userMapper.findAll(paginate, currentPage);
     }
 
     public User findById(long userId) {

@@ -1,5 +1,6 @@
 package com.shopping.intern.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,12 @@ public class UserAction extends ActionSupport {
 
     private List<User> userList;
 
+    private int currentPage;
+
+    private int amountForPage = 5;
+
+    private int totalPage;
+
     public UserAction(IUserService userService) {
         this.userService = userService;
     }
@@ -61,6 +68,30 @@ public class UserAction extends ActionSupport {
         this.requestURL = requestURL;
     }
 
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public int getAmountForPage() {
+        return amountForPage;
+    }
+
+    public void setAmountForPage(int amountForPage) {
+        this.amountForPage = amountForPage;
+    }
+
+    public int getTotalPage() {
+        return totalPage;
+    }
+
+    public void setTotalPage(int totalPage) {
+        this.totalPage = totalPage;
+    }
+
     @Action("dashboard")
     public String index() {
         requestURL = "dashboard";
@@ -71,7 +102,15 @@ public class UserAction extends ActionSupport {
     public String users() {
         requestURL = "users-management";
 
-        userList = this.userService.findAll();
+        String page = ServletActionContext.getRequest().getParameter("page");
+
+        currentPage = page == null ? 0 : Integer.valueOf(page);
+
+        ArrayList<User> totalUsers = this.userService.findAll();
+        totalPage = (int) Math.ceil((double) totalUsers.size() / amountForPage);
+
+        userList = this.userService.paginate(currentPage);
+        currentPage = currentPage + 1;
         for (User user : userList) {
             System.out.println(user.getEmail());
         }

@@ -107,7 +107,7 @@
                 </div>
                 <div class="col-auto">
                     <button name="clear" type="button" class="btn btn-success"
-                        onclick="common.clearSearchResult('/user/dashboard')">
+                        onclick="common.clearSearchResult('/user/users')">
                         <i class="fas fa-window-close mr-2"></i>
                         Clear
                     </button>
@@ -116,18 +116,16 @@
         </div>
     </form>
     <div class="card">
-        <!-- <div class="card-header">
+        <div class="card-header">
             <div class="row">
                 <div class="col-8 d-flex justify-content-start">
-                    <ul class="pagination pagination-sm m-0">
-                        {{ $admins->links() }}
-                    </ul>
+                    <%@ include file = "../layouts/page-number.jsp" %>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    Display {{ $iFromValue }} ~ {{ $iToValue }} in total of {{ $admins->total() }} users
+                    Display ${(currentPage * amountForPage) - amountForPage + 1} ~ ${currentPage * amountForPage} in total of ${userList.size()} users
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="card-body">
             <table class="table table-hover">
                 <thead>
@@ -154,9 +152,9 @@
                                     </a>
                                 </td>
                                 <td>${user.email}</td>
-                                <td>${user.groupId}</td>
-                                <td>
-                                    <s:if test="user.isDelete == 1">
+                                <td>${user.groupName}</td>
+                                <td class="font-weight-bold">
+                                    <s:if test="#user.isActive == 1">
                                         <span class="text-success">
                                             Active
                                         </span>
@@ -167,7 +165,7 @@
                                         </span>
                                     </s:else>
                                 </td>
-                                <td></td>
+                                <td>${user.updatedByUser}</td>
                                 <td>
                                     <div class="btn-group">
                                         <div>
@@ -205,11 +203,9 @@
                 </tbody>
             </table>
         </div>
-        <!-- <div class="card-footer">
+        <div class="card-footer">
             <div class="d-flex justify-content-end">
-                <ul class="pagination pagination-sm m-0">
-                    {{ $admins->links() }}
-                </ul>
+                <%@ include file = "../layouts/page-number.jsp" %>
             </div>
-        </div> -->
+        </div>
     </div>
