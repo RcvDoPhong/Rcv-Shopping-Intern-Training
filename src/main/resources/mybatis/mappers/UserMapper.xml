@@ -20,6 +20,7 @@
     <select id="findAll" resultType="User">
         SELECT <include refid="Base_Column_List" />
         FROM mst_users
+        WHERE is_delete != 1
     </select>
     <select id="existByEmail" resultType="boolean" parameterType="String">
         SELECT EXISTS (SELECT email FROM mst_users WHERE email=${email})
@@ -46,4 +47,5 @@
     <delete id="deleteById" parameterType="long">
         UPDATE users SET is_delete=0 WHERE user_id = #{userId}
     </delete>
+    
 </mapper>
