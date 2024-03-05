@@ -11,13 +11,24 @@ const user = {
     },
     createUser: function(targetButton) {
         const data = $("#userCreationForm").serialize();
-        console.log(data);
         $.ajax({
             type: "POST",
             url: "/user/users/create",
             data: data,
-            success: function(response) {
-                console.log(response);
+            dataType: "json",
+            success: function (response) {
+                const jsonResponse = JSON.parse(response.jsonResponse.body);
+                const statusCode = parseInt(response.jsonResponse.statusCodeValue);
+                switch (statusCode) {
+                    case 422:
+                        console.log(jsonResponse.error);
+                        break;
+                
+                    default:
+                        console.log(jsonResponse)
+                        break;
+                }
+                console.log(jsonResponse, statusCode)
             }
         })
     }

@@ -15,7 +15,7 @@
                                     <label class="mt-2">Name</label>
                                 </div>
                                 <div class="col-10">
-                                    <input name="user.userName" type="text" class="form-control" value="${userName}"
+                                    <input name="userRequest.userName" type="text" class="form-control" value=""
                                         placeholder="Type name">
                                     <span name="name" class="error invalid-feedback d-flex"></span>
                                 </div>
@@ -27,7 +27,7 @@
                                     <label class="mt-2">Email</label>
                                 </div>
                                 <div class="col-10">
-                                    <input name="user.email" type="text" class="form-control" value="${email}"
+                                    <input name="userRequest.email" type="text" class="form-control" value="${email}"
                                         placeholder="Type email">
                                     <span name="email" class="error invalid-feedback d-flex"></span>
                                 </div>
@@ -39,8 +39,8 @@
                                     <label class="mt-2">Group</label>
                                 </div>
                                 <div class="col-md">
-                                    <select class="form-control" name="user.groupId">
-                                        <option value="">Select group</option>
+                                    <select class="form-control" name="userRequest.groupId">
+                                        <option value="" selected>Select group</option>
                                         <span id="ogSelectValues">
                                             <s:iterator value="groupList" var="group">
                                                 <option value="${group.groupId}">
@@ -59,8 +59,8 @@
                                     <label class="mt-2">Status</label>
                                 </div>
                                 <div class="col-md">
-                                    <select class="form-control" name="user.isActive">
-                                        <option value="">Select status</option>
+                                    <select class="form-control" name="userRequest.isActive">
+                                        <option value="" selected>Select status</option>
                                         <s:iterator begin="0" end="statusList.length - 1" var="index">
                                             <option value="${index}">
                                                 ${statusList[index]}

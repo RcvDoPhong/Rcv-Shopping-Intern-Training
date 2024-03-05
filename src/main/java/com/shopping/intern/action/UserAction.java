@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.catalina.connector.Response;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -20,12 +21,14 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shopping.intern.model.Group;
 import com.shopping.intern.model.User;
+import com.shopping.intern.request.UserCreateUpdateRequest;
 import com.shopping.intern.service.Group.IGroupService;
 import com.shopping.intern.service.User.IUserService;
 
 @Namespace("/user/users")
 @Results({
-        @Result(name = "index", type = "tiles", location = "users") // location to indicate which tiles to us
+        @Result(name = "index", type = "tiles", location = "users"), // location to indicate which tiles to us
+        @Result(type = "json")
 })
 @TilesDefinitions({
         @TilesDefinition(name = "users", extend = "masterLayout")
@@ -49,13 +52,15 @@ public class UserAction extends ActionSupport {
 
     private String[] statusList = {"Non-Active", "Active"};
 
-    private User user;
+    private UserCreateUpdateRequest userRequest;
 
-    private int currentPage;
+    private int page;
 
     private int amountForPage = 5;
 
     private int totalPage;
+
+    private ResponseEntity<String> jsonResponse;
 
     public UserAction(IUserService userService, IGroupService groupService) {
         this.userService = userService;
@@ -90,12 +95,12 @@ public class UserAction extends ActionSupport {
     }
 
     // Current page
-    public int getCurrentPage() {
-        return currentPage;
+    public int getPage() {
+        return page;
     }
 
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
+    public void setPage(int page) {
+        this.page = page;
     }
 
     // Amount of users display on 1 page
@@ -117,12 +122,12 @@ public class UserAction extends ActionSupport {
     }
 
     // User's info
-    public User getUser() {
-        return user;
+    public UserCreateUpdateRequest getUserRequest() {
+        return userRequest;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserRequest(UserCreateUpdateRequest userRequest) {
+        this.userRequest = userRequest;
     }
 
     // Status list
@@ -134,19 +139,27 @@ public class UserAction extends ActionSupport {
         this.statusList = statusList;
     }
 
+    public ResponseEntity<String> getJsonResponse() {
+        return jsonResponse;
+    }
+
+    public void setJsonResponse(ResponseEntity<String> jsonResponse) {
+        this.jsonResponse = jsonResponse;
+    }
+
     @Action("")
     @Override
     public String execute() {
         requestURL = "users-management";
 
-        String page = request.getParameter("page");
+        String pageGet = request.getParameter("page");
 
-        setCurrentPage(page == null ? 1 : Integer.valueOf(page));
+        setPage(pageGet == null ? 1 : Integer.valueOf(page));
 
         List<User> totalUsers = this.userService.findAll();
         setTotalPage((int) Math.ceil((double) totalUsers.size() / amountForPage));
 
-        int limitTake = (currentPage - 1) * amountForPage;
+        int limitTake = (page - 1) * amountForPage;
 
         setUserList(this.userService.paginate(limitTake, amountForPage));
         setGroupList(this.groupService.findAll());
@@ -154,10 +167,10 @@ public class UserAction extends ActionSupport {
     }
 
     @Action("create")
-    public ResponseEntity create() {
-        JSONObject response = this.userService.validate(user);
+    public String create() {
+        setJsonResponse(this.userService.validate(userRequest));
 
-        return ResponseEntity.ok(response.toString());
+        return SUCCESS;
     }
 
     @Action("delete")

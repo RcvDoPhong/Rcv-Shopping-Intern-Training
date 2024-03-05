@@ -13,6 +13,7 @@
 
         <result-types>
             <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" />
+            <result-type name="json" class="org.apache.struts2.json.JSONResult"/>
         </result-types>
 
         <interceptors>
@@ -37,7 +38,10 @@
                 <param name="actionName">login</param>
                 <param name="namespace">/user</param>
             </result>
-            <result name="homeRedirect" type="redirectAction">dashboard</result>
+            <result name="homeRedirect" type="redirectAction">
+                <param name="actionName">dashboard</param>
+                <param name="namespace">/user/users</param>
+            </result>
         </global-results>
 
     </package>
