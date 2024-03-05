@@ -22,14 +22,15 @@ import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 import com.shopping.intern.helper.Helper;
 import com.shopping.intern.helper.RouteHelper;
+import com.shopping.intern.model.User;
 import com.shopping.intern.request.UserLoginRequest;
-import com.shopping.intern.service.IUserService;
+import com.shopping.intern.service.User.IUserService;
 
 // @Controller
 @Namespace(value = "/user")
-@InterceptorRefs({
-    @InterceptorRef(value = "loginSecureStack")
-})
+// @InterceptorRefs({
+//     @InterceptorRef(value = "loginSecureStack")
+// })
 public class LoginAction extends ActionSupport {
 
     // What is this used for?
@@ -37,34 +38,20 @@ public class LoginAction extends ActionSupport {
 
     private IUserService userService;
 
-    private String email;
+    private User user;
 
-    private String password;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public LoginAction(IUserService userService) {
         this.userService = userService;
     }
 
-    @StringLengthFieldValidator(minLength = "6", message = "Password must greater or equal to 6 characters", fieldName = "password")
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @EmailValidator(message = "Please enter a valid email address", fieldName = "email")
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    // @EmailValidator(type = ValidatorType.SIMPLE, message = "Please enter a valid
-    // email address", fieldName = "email")
     @Action(value = "loginAction", results = {
         // @Result(name = "input", type = "redirectAction", params = {"actionName", "login"}),
         @Result(name = "input", type = "redirectAction", params = {"actionName", "login"}),
@@ -75,8 +62,8 @@ public class LoginAction extends ActionSupport {
     })
     public String login() {
         Object userSession = ServletActionContext.getRequest().getSession().getAttribute("userSession");
-        if (userSession == null && (getEmail() != null && getPassword() != null)) {
-            UserLoginRequest loginRequest = new UserLoginRequest(getEmail(), getPassword());
+        if (userSession == null && (user.getEmail() != null && user.getPassword() != null)) {
+            UserLoginRequest loginRequest = new UserLoginRequest(user.getEmail(), user.getPassword());
             if (this.userService.checkLogin(loginRequest)) {
                 return "redirectPageResult";
             } else {
@@ -99,12 +86,12 @@ public class LoginAction extends ActionSupport {
     @Override
     public void validate() {
         boolean errorValidate = false;
-        if (getPassword() != null && getPassword().length() < 6) {
+        if (user.getPassword() != null && user.getPassword().length() < 6) {
             errorValidate = true;
             addFieldError("password-error", "Password must greater or equal to 6 characters");
         }
         if (errorValidate) {
-            this.userService.storeTempValueLoginFail(new UserLoginRequest(getEmail(), getPassword()));
+            this.userService.storeTempValueLoginFail(new UserLoginRequest(user.getEmail(), user.getPassword()));
         }
     }
 }

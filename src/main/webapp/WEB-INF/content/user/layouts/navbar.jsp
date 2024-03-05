@@ -31,7 +31,7 @@
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         Sign out
                     </a> -->
-                    <a href="/user/logout" class="btn btn-default btn-flat float-right">
+                    <a href="/user/users/logout" class="btn btn-default btn-flat float-right">
                         Sign out
                     </a>
                 </li>

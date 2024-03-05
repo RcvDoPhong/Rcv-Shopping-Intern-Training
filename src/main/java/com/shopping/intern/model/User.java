@@ -1,6 +1,6 @@
 package com.shopping.intern.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class User {
 
@@ -40,7 +40,6 @@ public class User {
     private String updatedByUser;
 
     public User() {
-
     }
 
     // User's ID
@@ -75,8 +74,8 @@ public class User {
         return this.userName;
     }
 
-    public void setUserName(String user_name) {
-        this.userName = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     // User's rememberToken
@@ -129,8 +128,8 @@ public class User {
         return groupName;
     }
 
-    public void setGroupName(String group_name) {
-        this.groupName = group_name;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     // User's Last Login Info
@@ -180,8 +179,8 @@ public class User {
         return updatedByUser;
     }
 
-    public void setUpdatedByUser(String updated_by_user) {
-        this.updatedByUser = updated_by_user;
+    public void setUpdatedByUser(String updatedByUser) {
+        this.updatedByUser = updatedByUser;
     }
 
     public boolean isActiveStatus() {

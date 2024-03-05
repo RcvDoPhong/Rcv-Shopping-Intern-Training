@@ -1,6 +1,5 @@
 package com.shopping.intern.repository.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.shopping.intern.model.User;
@@ -8,7 +7,7 @@ import com.shopping.intern.request.UserLoginRequest;
 
 public interface IUserRepository {
 
-    ArrayList<User> findAll(boolean paginate, int currentPage);
+    List<User> findAll(boolean paginate, int currentPage, int perPage);
 
     User findById(long userId);
 
@@ -18,5 +17,9 @@ public interface IUserRepository {
 
     void update(User user);
 
+    void lockById(long userId);
+
     void deleteById(long userId);
+
+    User findByName(String name);
 }

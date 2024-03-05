@@ -1,13 +1,17 @@
-package com.shopping.intern.service;
+package com.shopping.intern.service.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.catalina.connector.Response;
+import org.json.JSONObject;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.opensymphony.xwork2.ActionContext;
 import com.shopping.intern.mapper.UserMapper;
 import com.shopping.intern.model.User;
@@ -18,20 +22,40 @@ import com.shopping.intern.request.UserLoginRequest;
 public class UserService implements IUserService {
     private final IUserRepository userRepo;
 
+    private byte DELETE = 1;
+
+    private byte DISABLED = 0;
+
     public UserService(IUserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
-    // public boolean existByEmail(String email) {
-    //     return this.userRepo.existByEmail(email);
-    // }
-
-    public ArrayList<User> paginate(int currentPage) {
-        return this.userRepo.findAll(true, currentPage);
+    public byte getDELETE() {
+        return DELETE;
     }
 
-    public ArrayList<User> findAll() {
-        return this.userRepo.findAll(false, 0);
+    public void setDELETE(byte dELETE) {
+        DELETE = dELETE;
+    }
+
+    public byte getDISABLED() {
+        return DISABLED;
+    }
+
+    public void setDISABLED(byte dISABLED) {
+        DISABLED = dISABLED;
+    }
+
+    // public boolean existByEmail(String email) {
+    // return this.userRepo.existByEmail(email);
+    // }
+
+    public List<User> paginate(int currentPage, int perPage) {
+        return this.userRepo.findAll(true, currentPage, perPage);
+    }
+
+    public List<User> findAll() {
+        return this.userRepo.findAll(false, 0, 0);
     }
 
     public User findById(long userId) {
@@ -52,6 +76,10 @@ public class UserService implements IUserService {
 
     public void deleteById(long userId) {
         this.userRepo.deleteById(userId);
+    }
+
+    public void lockById(long userId) {
+        this.userRepo.lockById(userId);
     }
 
     public boolean checkLogin(UserLoginRequest userLoginRequest) {
@@ -77,7 +105,20 @@ public class UserService implements IUserService {
         session.put("email", userLoginRequest.getEmail());
     }
 
-    // public boolean loginUser(String email) {
-    //     return this.userMapper.existByEmail(email);
-    // }
+    public JSONObject validate(User userRequest) {
+        JSONObject response = new JSONObject();
+
+        response.put("name", userRequest.getUserName());
+        response.put("email", userRequest.getEmail());
+        response.put("groupId", userRequest.getGroupId());
+        response.put("isActive", userRequest.getIsActive());
+        System.out.println(response.toString());
+
+        return response;
+        // User user = this.userRepo.findByName(userRequest.getUserName());
+
+        // if (user != null) {
+
+        // }
+    }
 }
