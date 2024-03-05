@@ -165,6 +165,12 @@
 			<version>20230618</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-json-plugin</artifactId>
+			<version>2.5.20</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

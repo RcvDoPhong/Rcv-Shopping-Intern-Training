@@ -1,7 +1,10 @@
 package com.shopping.intern.service.User;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.catalina.connector.Response;
 import org.json.JSONObject;
@@ -16,6 +19,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.shopping.intern.mapper.UserMapper;
 import com.shopping.intern.model.User;
 import com.shopping.intern.repository.User.IUserRepository;
+import com.shopping.intern.request.UserCreateUpdateRequest;
 import com.shopping.intern.request.UserLoginRequest;
 
 @Service
@@ -105,16 +109,49 @@ public class UserService implements IUserService {
         session.put("email", userLoginRequest.getEmail());
     }
 
-    public JSONObject validate(User userRequest) {
+    public ResponseEntity<String> validate(UserCreateUpdateRequest userRequest) {
         JSONObject response = new JSONObject();
+        boolean validateFail = false;
+        Pattern emailValidation = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
+                Pattern.CASE_INSENSITIVE);
 
+        // Map<String, Object> userValidate =
+        // this.checkEmptyOrShortField(userRequest.getEmail(), 6);
+        if (userRequest.getUserName() == null) {
+            validateFail = true;
+            response.put("name", "Name is empty");
+        } else if (userRequest.getUserName().length() <= 6) {
+            validateFail = true;
+            response.put("name", "Name is shorter than 6 characters");
+        }
+
+        if (!emailValidation.matcher(userRequest.getEmail()).matches()) {
+            validateFail = true;
+            response.put("email", "Email is invalid");
+        }
+
+        if (userRequest.getGroupId() < 1) {
+            validateFail = true;
+            response.put("groupId", "Group is invalid");
+        }
+
+        if (userRequest.getIsActive() < 0) {
+            validateFail = true;
+            response.put("isActive", "Status is invalid");
+        }
+
+        if (validateFail) {
+            JSONObject error = new JSONObject();
+            error.put("error", response);
+            return new ResponseEntity<String>(error.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
         response.put("name", userRequest.getUserName());
         response.put("email", userRequest.getEmail());
         response.put("groupId", userRequest.getGroupId());
         response.put("isActive", userRequest.getIsActive());
-        System.out.println(response.toString());
 
-        return response;
+        return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
+
         // User user = this.userRepo.findByName(userRequest.getUserName());
 
         // if (user != null) {

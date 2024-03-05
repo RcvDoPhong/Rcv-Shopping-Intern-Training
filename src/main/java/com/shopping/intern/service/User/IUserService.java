@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 
 import com.shopping.intern.model.User;
+import com.shopping.intern.request.UserCreateUpdateRequest;
 import com.shopping.intern.request.UserLoginRequest;
 
 public interface IUserService {
@@ -34,5 +35,5 @@ public interface IUserService {
 
     void storeTempValueLoginFail(UserLoginRequest userLoginRequest);
 
-    JSONObject validate(User userRequest);
+    ResponseEntity<String> validate(UserCreateUpdateRequest userRequest);
 }
