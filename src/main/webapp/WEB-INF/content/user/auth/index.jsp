@@ -25,7 +25,7 @@
                                 <form method="post" action="/user/loginAction" name="loginForm">
                                     <div class="input-group mb-3">
                                         <input type="email" value="${email}"
-                                            class="form-control" name="email"
+                                            class="form-control" name="user.email"
                                             placeholder="Email">
                                         <%
                                             System.out.println(request.getRequestURL());
@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="input-group mb-3">
                                         <input type="password"
-                                            class="form-control" name="password"
+                                            class="form-control" name="user.password"
                                             placeholder="Password">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
@@ -55,7 +55,7 @@
                                             <s:fielderror fieldName="password-error" />
                                         </span>
                                     </div>
-                                    <div>
+                                    <!-- <div>
                                         <div class="col-8">
                                             <div class="icheck-primary">
                                                 <input type="checkbox" name="remember" id="remember">
@@ -64,7 +64,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="text-center mt-2 mb-3">
                                         <button type="submit" class="btn btn-block btn-primary" id="loginBtn">
                                             Login

@@ -5,6 +5,7 @@
     <definition name="masterLayout" template="/WEB-INF/content/user/layouts/master.jsp">
         <put-attribute name="title" value="Tiles Sample" />
         <put-attribute name="body" value="" />
+        <put-attribute name="additionalScripts" value=""></put-attribute>
     </definition>
 
     <definition name="dashboard" extends="masterLayout">

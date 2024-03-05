@@ -1,16 +1,18 @@
-package com.shopping.intern.service;
+package com.shopping.intern.service.User;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 
 import com.shopping.intern.model.User;
 import com.shopping.intern.request.UserLoginRequest;
 
 public interface IUserService {
 
-    ArrayList<User> paginate(int currentPage);
+    List<User> paginate(int currentPage, int perPage);
 
-    ArrayList<User> findAll();
+    List<User> findAll();
 
     User findById(long userId);
 
@@ -24,9 +26,13 @@ public interface IUserService {
 
     void deleteById(long userId);
 
+    void lockById(long userId);
+
     // boolean loginUser(String email);
 
     boolean checkLogin(UserLoginRequest userLoginRequest);
 
     void storeTempValueLoginFail(UserLoginRequest userLoginRequest);
+
+    JSONObject validate(User userRequest);
 }

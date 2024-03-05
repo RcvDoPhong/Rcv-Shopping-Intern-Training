@@ -16,35 +16,19 @@
                         placeholder="Type email">
                 </div>
             </div>
-            <div class="col-auto">
-                <div class="form-group">
-                    <label class="mt-2 d-flex" for="nickname">Gender</label>
-                    <select name="gender" class="custom-select" aria-label="Default
-                        select example">
-                        <option value="">Select gender</option>
-                        <!-- @foreach ($genderList as $gender)
-                        <option value="{{ $gender['id'] }}" @if (is_numeric(request()->input('gender')) &&
-                            intval(request()->input('gender')) === $gender['id']) selected @endif>
-                            {{ $gender['name'] }}
-                        </option>
-                        @endforeach -->
-                    </select>
-                </div>
-            </div>
         </div>
         <div class="row">
             <div class="col-auto">
                 <div class="form-group">
-                    <label class="mt-2 d-flex" for="role">Role</label>
-                    <select name="role_id" class="custom-select" aria-label="Default
-                        select example">
-                        <option value="">Select role</option>
-                        <!-- @foreach ($roleList as $role)
-                        <option value="{{ $role->role_id }}" @if (intval(request()->input('role_id')) ===
-                            $role->role_id) selected @endif>
-                            {{ ucfirst($role->role_name) }}
-                        </option>
-                        @endforeach -->
+                    <label class="mt-2 d-flex" for="role">Group</label>
+                    <select name="group_id" class="custom-select">
+                        <option value="">Select group</option>
+                        <s:property value="groupList" />
+                        <s:iterator value="groupList" var="group">
+                            <option value="#group.groupId">
+                                ${group.groupName}
+                            </option>
+                        </s:iterator>
                     </select>
                 </div>
             </div>
@@ -93,7 +77,8 @@
         </div>
         <div class="row mb-3">
             <div class="col-md">
-                <a href="#" class="btn btn-primary text-white">
+                <a href="#" class="btn btn-primary text-white" data-userId="" data-modal="#modalGlobal"
+                    onclick="user.renderModal(this)">
                     <i class="fas fa-plus mr-2"></i>
                     <span>Add new</span>
                 </a>
@@ -119,10 +104,11 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-8 d-flex justify-content-start">
-                    <%@ include file = "../layouts/page-number.jsp" %>
+                    <%@ include file="../layouts/page-number.jsp" %>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    Display ${(currentPage * amountForPage) - amountForPage + 1} ~ ${currentPage * amountForPage} in total of ${userList.size()} users
+                    Display ${(currentPage * amountForPage) - amountForPage + 1} ~ ${currentPage * amountForPage} in
+                    total of ${userList.size()} users
                 </div>
             </div>
         </div>
@@ -146,8 +132,7 @@
                             <tr>
                                 <td>${user.userId}</td>
                                 <td>
-                                    <a href="#"
-                                        class="text-decoration-none">
+                                    <a href="#" class="text-decoration-none">
                                         ${user.userName}
                                     </a>
                                 </td>
@@ -169,23 +154,24 @@
                                 <td>
                                     <div class="btn-group">
                                         <div>
-                                            <a href="#"
-                                                class="btn btn-primary text-white">
+                                            <a href="#" class="btn btn-primary text-white">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         </div>
-                                        <form action="#" method="POST">
-                                            <button name="delete" class="btn btn-danger ml-1"
-                                                onclick="common.sweetAlertWithButton(this, event, 'Delete user','Are you sure?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                        <form action="#" method="POST">
-                                            <button name="lock" class="btn btn-dark ml-1"
-                                                onclick="common.sweetAlertWithButton(this, event, 'Lock user','Are you sure?')">
-                                                <i class="fas fa-lock"></i>
-                                            </button>
-                                        </form>
+                                        <s:if test="#session.userSession != null && #session.userSession.userId != #user.userId">
+                                            <form action="/user/users/delete?userId=${user.userId}" method="POST">
+                                                <button name="delete" class="btn btn-danger ml-1"
+                                                    onclick="common.sweetAlertWithButton(this, event, 'Delete user','Are you sure?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            <form action="/user/users/lock?userId=${user.userId}" method="POST">
+                                                <button name="lock" class="btn btn-dark ml-1"
+                                                    onclick="common.sweetAlertWithButton(this, event, 'Lock user','Are you sure?')">
+                                                    <i class="fas fa-lock"></i>
+                                                </button>
+                                            </form>
+                                        </s:if>
                                     </div>
                                 </td>
                             </tr>
@@ -205,7 +191,10 @@
         </div>
         <div class="card-footer">
             <div class="d-flex justify-content-end">
-                <%@ include file = "../layouts/page-number.jsp" %>
+                <%@ include file="../layouts/page-number.jsp" %>
             </div>
         </div>
     </div>
+    <%@ include file="../layouts/modal-users.jsp" %>
+        <!-- Will move to another place later -->
+        <script src="/user/style/js/users.js"></script>

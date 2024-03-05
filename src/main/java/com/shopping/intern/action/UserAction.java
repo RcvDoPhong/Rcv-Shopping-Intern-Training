@@ -7,40 +7,49 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.InterceptorRef;
-import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.tiles.annotation.TilesDefinition;
 import org.apache.struts2.tiles.annotation.TilesDefinitions;
-import org.apache.struts2.tiles.annotation.TilesPutAttribute;
-import org.springframework.stereotype.Service;
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.shopping.intern.model.Group;
 import com.shopping.intern.model.User;
-import com.shopping.intern.service.IUserService;
+import com.shopping.intern.service.Group.IGroupService;
+import com.shopping.intern.service.User.IUserService;
 
-@Namespace("/user")
+@Namespace("/user/users")
 @Results({
-        @Result(name = "home", type = "tiles", location = "dashboard"),
-        @Result(name = "index", type = "tiles", location = "users") // location to indicate which tiles to use
+        @Result(name = "index", type = "tiles", location = "users") // location to indicate which tiles to us
 })
 @TilesDefinitions({
-        @TilesDefinition(name = "dashboard", extend = "masterLayout"),
         @TilesDefinition(name = "users", extend = "masterLayout")
 })
 // @InterceptorRefs({
-//         @InterceptorRef(value = "authSecureStack")
+// @InterceptorRef(value = "authSecureStack")
 // })
 public class UserAction extends ActionSupport {
 
+    private HttpServletRequest request = ServletActionContext.getRequest();
+
     private IUserService userService;
+
+    private IGroupService groupService;
 
     private String requestURL;
 
     private List<User> userList;
+
+    private List<Group> groupList;
+
+    private String[] statusList = {"Non-Active", "Active"};
+
+    private User user;
 
     private int currentPage;
 
@@ -48,10 +57,12 @@ public class UserAction extends ActionSupport {
 
     private int totalPage;
 
-    public UserAction(IUserService userService) {
+    public UserAction(IUserService userService, IGroupService groupService) {
         this.userService = userService;
+        this.groupService = groupService;
     }
 
+    // User list
     public List<User> getUserList() {
         return userList;
     }
@@ -60,6 +71,16 @@ public class UserAction extends ActionSupport {
         this.userList = userList;
     }
 
+    // Group List
+    public List<Group> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<Group> groupList) {
+        this.groupList = groupList;
+    }
+
+    // Request URL
     public String getRequestURL() {
         return requestURL;
     }
@@ -68,6 +89,7 @@ public class UserAction extends ActionSupport {
         this.requestURL = requestURL;
     }
 
+    // Current page
     public int getCurrentPage() {
         return currentPage;
     }
@@ -76,6 +98,7 @@ public class UserAction extends ActionSupport {
         this.currentPage = currentPage;
     }
 
+    // Amount of users display on 1 page
     public int getAmountForPage() {
         return amountForPage;
     }
@@ -84,6 +107,7 @@ public class UserAction extends ActionSupport {
         this.amountForPage = amountForPage;
     }
 
+    // Total page
     public int getTotalPage() {
         return totalPage;
     }
@@ -92,29 +116,62 @@ public class UserAction extends ActionSupport {
         this.totalPage = totalPage;
     }
 
-    @Action("dashboard")
-    public String index() {
-        requestURL = "dashboard";
-        return "home";
+    // User's info
+    public User getUser() {
+        return user;
     }
 
-    @Action("users")
-    public String users() {
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    // Status list
+    public String[] getStatusList() {
+        return statusList;
+    }
+
+    public void setStatusList(String[] statusList) {
+        this.statusList = statusList;
+    }
+
+    @Action("")
+    @Override
+    public String execute() {
         requestURL = "users-management";
 
-        String page = ServletActionContext.getRequest().getParameter("page");
+        String page = request.getParameter("page");
 
-        currentPage = page == null ? 0 : Integer.valueOf(page);
+        setCurrentPage(page == null ? 1 : Integer.valueOf(page));
 
-        ArrayList<User> totalUsers = this.userService.findAll();
-        totalPage = (int) Math.ceil((double) totalUsers.size() / amountForPage);
+        List<User> totalUsers = this.userService.findAll();
+        setTotalPage((int) Math.ceil((double) totalUsers.size() / amountForPage));
 
-        userList = this.userService.paginate(currentPage);
-        currentPage = currentPage + 1;
-        for (User user : userList) {
-            System.out.println(user.getEmail());
-        }
+        int limitTake = (currentPage - 1) * amountForPage;
+
+        setUserList(this.userService.paginate(limitTake, amountForPage));
+        setGroupList(this.groupService.findAll());
         return "index";
+    }
+
+    @Action("create")
+    public ResponseEntity create() {
+        JSONObject response = this.userService.validate(user);
+
+        return ResponseEntity.ok(response.toString());
+    }
+
+    @Action("delete")
+    public void delete() {
+        long userId = Long.valueOf(request.getParameter("userId"));
+        this.userService.deleteById(userId);
+        System.out.println(userId);
+    }
+
+    @Action("lock")
+    public void lock() {
+        long userId = Long.valueOf(request.getParameter("userId"));
+        this.userService.lockById(userId);
+        System.out.println(userId);
     }
 
     @Action("logout")
