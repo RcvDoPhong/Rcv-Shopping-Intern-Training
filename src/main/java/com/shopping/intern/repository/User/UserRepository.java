@@ -19,16 +19,20 @@ public class UserRepository implements IUserRepository {
         this.userMapper = userMapper;
     }
 
-    public List<User> findAll(boolean paginate, int currentPage, int perPage) {
-        return this.userMapper.findAll(paginate, currentPage, perPage);
+    public List<User> findAll(boolean paginate, int currentPage, int perPage, User userSearchForm) {
+        return this.userMapper.findAll(paginate, currentPage, perPage, userSearchForm);
     }
 
     public User findById(long userId) {
         return this.userMapper.findById(userId);
     }
 
+    public User findByEmailWithException(String email, long userId) {
+        return this.userMapper.findByEmail(email, userId);
+    }
+
     public User findByEmail(String email) {
-        return this.userMapper.findByEmail(email);
+        return this.userMapper.findByEmail(email, 0);
     }
 
     public void insert(User user) {
@@ -49,5 +53,21 @@ public class UserRepository implements IUserRepository {
 
     public User findByName(String name) {
         return this.userMapper.findByName(name);
+    }
+
+    public User find(String value, String column, long userId) {
+        User user = null;
+        switch (column) {
+            case "userId":
+                return this.findById(Integer.parseInt(value));
+
+            case "name":
+                return this.findByName(value);
+
+            case "email":
+                return this.findByEmailWithException(value, userId);
+        }
+
+        return user;
     }
 }

@@ -8,6 +8,7 @@
             </div>
             <div class="modal-body">
                 <form action="/user/users/create" method="POST" id="userCreationForm">
+                    <input type="hidden" name="userRequest.userId" id="userId" value="">
                     <div id="content">
                         <div class="mt-3 pr-4">
                             <div class="row form-group">
@@ -15,9 +16,9 @@
                                     <label class="mt-2">Name</label>
                                 </div>
                                 <div class="col-10">
-                                    <input name="userRequest.userName" type="text" class="form-control" value=""
+                                    <input name="userRequest.userName" id="name" type="text" class="form-control" value=""
                                         placeholder="Type name">
-                                    <span name="name" class="error invalid-feedback d-flex"></span>
+                                    <span name="name" id="name" class="error validation invalid-feedback d-flex"></span>
                                 </div>
                             </div>
                         </div>
@@ -27,9 +28,9 @@
                                     <label class="mt-2">Email</label>
                                 </div>
                                 <div class="col-10">
-                                    <input name="userRequest.email" type="text" class="form-control" value="${email}"
+                                    <input name="userRequest.email" id="email" type="text" class="form-control" value="${email}"
                                         placeholder="Type email">
-                                    <span name="email" class="error invalid-feedback d-flex"></span>
+                                    <span name="email" id="email" class="error validation invalid-feedback d-flex"></span>
                                 </div>
                             </div>
                         </div>
@@ -39,8 +40,8 @@
                                     <label class="mt-2">Group</label>
                                 </div>
                                 <div class="col-md">
-                                    <select class="form-control" name="userRequest.groupId">
-                                        <option value="" selected>Select group</option>
+                                    <select class="form-control" name="userRequest.groupId" id="group">
+                                        <option value="-1" selected>Select group</option>
                                         <span id="ogSelectValues">
                                             <s:iterator value="groupList" var="group">
                                                 <option value="${group.groupId}">
@@ -49,7 +50,7 @@
                                             </s:iterator>
                                         </span>
                                     </select>
-                                    <span name="groupId" class="error invalid-feedback d-flex"></span>
+                                    <span name="groupId" id="group" class="error validation invalid-feedback d-flex"></span>
                                 </div>
                             </div>
                         </div>
@@ -59,15 +60,15 @@
                                     <label class="mt-2">Status</label>
                                 </div>
                                 <div class="col-md">
-                                    <select class="form-control" name="userRequest.isActive">
-                                        <option value="" selected>Select status</option>
+                                    <select class="form-control" name="userRequest.isActive" id="status">
+                                        <option value="-1" selected>Select status</option>
                                         <s:iterator begin="0" end="statusList.length - 1" var="index">
                                             <option value="${index}">
                                                 ${statusList[index]}
                                             </option>
                                         </s:iterator>
                                     </select>
-                                    <span name="isActive" class="error invalid-feedback d-flex"></span>
+                                    <span name="isActive" id="status" class="error validation invalid-feedback d-flex"></span>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +77,7 @@
                         <button type="button" class="btn btn-secondary" data-modal="#modalGlobal"
                             onclick="common.hideModal(this)">Close</button>
                         <div id="additionalButtons">
-                            <button type="button" class="btn btn-primary" data-modal="#modalGlobal"
+                            <button type="button" class="btn btn-primary" id="submitButton" data-modal="#modalGlobal"
                                 onclick="user.createUser(this)">Submit</button>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
-    <form action="#" method="get" id="searchForm">
+    <form action="/user/users/" method="GET" id="searchForm">
         <div class="row">
             <div class="col-auto">
                 <div class="form-group">
@@ -16,16 +16,14 @@
                         placeholder="Type email">
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="role">Group</label>
-                    <select name="group_id" class="custom-select">
+                    <select name="groupId" class="custom-select">
                         <option value="">Select group</option>
                         <s:property value="groupList" />
                         <s:iterator value="groupList" var="group">
-                            <option value="#group.groupId">
+                            <option value="${group.groupId}">
                                 ${group.groupName}
                             </option>
                         </s:iterator>
@@ -35,34 +33,21 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="is_active">Status</label>
-                    <select name="is_active" class="custom-select" aria-label="Default
+                    <select name="isActive" class="custom-select" aria-label="Default
                         select example">
-                        <option value="">Select status</option>
-                        <!-- @foreach ($statList as $stat)
-                        <option value="{{ $stat['id'] }}" @if (is_numeric(request()->input('is_active')) &&
-                            intval(request()->input('is_active')) === $stat['id']) selected @endif>
-                            {{ $stat['name'] }}
-                        </option>
-                        @endforeach -->
+                        <option value="-1">Select status</option>
+                        <s:iterator begin="0" end="statusList.length - 1" var="index">
+                            <option value="${index}">
+                                ${statusList[index]}
+                            </option>
+                        </s:iterator>
                     </select>
                 </div>
             </div>
             <div class="col-auto">
                 <div class="form-group">
-                    <label class="mt-2 d-flex" for="fromDate">BOD from day</label>
-                    <input name="fromDate" type="date" class="form-control d-flex" value="${formDate}">
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="form-group">
-                    <label class="mt-2 d-flex" for="toDate">BOD to day</label>
-                    <input name="toDate" type="date" class="form-control d-flex" value="${toDate}">
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="form-group">
                     <label class="mt-2 d-flex" for="updated_by">Updated by</label>
-                    <select name="updated_by" class="custom-select" aria-label="Default
+                    <select name="updatedBy" class="custom-select" aria-label="Default
                         select example">
                         <option value="">Select admin</option>
                         <!-- @foreach (adminList() as $admin)
@@ -77,7 +62,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-md">
-                <a href="#" class="btn btn-primary text-white" data-userId="" data-modal="#modalGlobal"
+                <a href="#" class="btn btn-primary text-white" data-modal="#modalGlobal"
                     onclick="user.renderModal(this)">
                     <i class="fas fa-plus mr-2"></i>
                     <span>Add new</span>
@@ -92,7 +77,7 @@
                 </div>
                 <div class="col-auto">
                     <button name="clear" type="button" class="btn btn-success"
-                        onclick="common.clearSearchResult('/user/users')">
+                        onclick="common.clearSearchResult('/user/users/')">
                         <i class="fas fa-window-close mr-2"></i>
                         Clear
                     </button>
@@ -108,7 +93,7 @@
                 </div>
                 <div class="col-4 d-flex justify-content-end">
                     Display ${(currentPage * amountForPage) - amountForPage + 1} ~ ${currentPage * amountForPage} in
-                    total of ${userList.size()} users
+                    total of ${userListPaginate.size()} users
                 </div>
             </div>
         </div>
@@ -126,8 +111,8 @@
                     </tr>
                 </thead>
                 <tbody id="user-table">
-                    <s:if test="userList.size() > 0">
-                        <s:iterator value="userList" var="user">
+                    <s:if test="userListPaginate.size() > 0">
+                        <s:iterator value="userListPaginate" var="user">
 
                             <tr>
                                 <td>${user.userId}</td>
@@ -154,11 +139,13 @@
                                 <td>
                                     <div class="btn-group">
                                         <div>
-                                            <a href="#" class="btn btn-primary text-white">
+                                            <a href="#" class="btn btn-primary text-white" data-id="${user.userId}"
+                                                data-modal="#modalGlobal" onclick="user.displayUser(this, event)">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         </div>
-                                        <s:if test="#session.userSession != null && #session.userSession.userId != #user.userId">
+                                        <s:if
+                                            test="#session.userSession != null && #session.userSession.userId != #user.userId">
                                             <form action="/user/users/delete?userId=${user.userId}" method="POST">
                                                 <button name="delete" class="btn btn-danger ml-1"
                                                     onclick="common.sweetAlertWithButton(this, event, 'Delete user','Are you sure?')">

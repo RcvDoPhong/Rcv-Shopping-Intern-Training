@@ -10,11 +10,11 @@ import com.shopping.intern.model.User;
 @Mapper
 public interface UserMapper {
 
-    ArrayList<User> findAll(boolean paginate, int currentPage, int perPage);
+    ArrayList<User> findAll(boolean paginate, int currentPage, int perPage, User userSearchForm);
 
     User findById(long userId);
 
-    User findByEmail(String email);
+    User findByEmail(String email, long userId);
 
     boolean existByEmail(String email);
 

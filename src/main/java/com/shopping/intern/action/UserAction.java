@@ -1,7 +1,9 @@
 package com.shopping.intern.action;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +13,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.apache.struts2.dispatcher.HttpParameters;
 import org.apache.struts2.tiles.annotation.TilesDefinition;
 import org.apache.struts2.tiles.annotation.TilesDefinitions;
 import org.json.JSONObject;
@@ -46,19 +49,26 @@ public class UserAction extends ActionSupport {
 
     private String requestURL;
 
-    private List<User> userList;
+    private List<User> userListPaginate;
 
     private List<Group> groupList;
 
-    private String[] statusList = {"Non-Active", "Active"};
+    private String[] statusList = { "Non-Active", "Active" };
 
-    private UserCreateUpdateRequest userRequest;
+    // private UserCreateUpdateRequest userRequest;
+    private User userRequest;
+
+    private User userSearchForm;
 
     private int page;
 
     private int amountForPage = 5;
 
     private int totalPage;
+
+    private long userId;
+
+    private String searchURL;
 
     private ResponseEntity<String> jsonResponse;
 
@@ -68,12 +78,12 @@ public class UserAction extends ActionSupport {
     }
 
     // User list
-    public List<User> getUserList() {
-        return userList;
+    public List<User> getUserListPaginate() {
+        return userListPaginate;
     }
 
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
+    public void setUserListPaginate(List<User> userListPaginate) {
+        this.userListPaginate = userListPaginate;
     }
 
     // Group List
@@ -122,11 +132,11 @@ public class UserAction extends ActionSupport {
     }
 
     // User's info
-    public UserCreateUpdateRequest getUserRequest() {
+    public User getUserRequest() {
         return userRequest;
     }
 
-    public void setUserRequest(UserCreateUpdateRequest userRequest) {
+    public void setUserRequest(User userRequest) {
         this.userRequest = userRequest;
     }
 
@@ -147,12 +157,42 @@ public class UserAction extends ActionSupport {
         this.jsonResponse = jsonResponse;
     }
 
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public User getUserSearchForm() {
+        return userSearchForm;
+    }
+
+    public void setUserSearchForm(User userSearchForm) {
+        this.userSearchForm = userSearchForm;
+    }
+
+    public String getSearchURL() {
+        return searchURL;
+    }
+
+    public void setSearchURL(String searchURL) {
+        this.searchURL = searchURL;
+    }
+
     @Action("")
     @Override
     public String execute() {
         requestURL = "users-management";
 
         String pageGet = request.getParameter("page");
+        HttpParameters params = ActionContext.getContext().getParameters();
+
+        // for (Object paramName : params.) {
+
+        // }
+        System.out.println(params);
 
         setPage(pageGet == null ? 1 : Integer.valueOf(page));
 
@@ -161,28 +201,41 @@ public class UserAction extends ActionSupport {
 
         int limitTake = (page - 1) * amountForPage;
 
-        setUserList(this.userService.paginate(limitTake, amountForPage));
+        setUserListPaginate(this.userService.paginate(limitTake, amountForPage, userSearchForm));
         setGroupList(this.groupService.findAll());
         return "index";
     }
 
     @Action("create")
     public String create() {
-        setJsonResponse(this.userService.validate(userRequest));
+        setJsonResponse(this.userService.validate(userRequest, "Create new user Successfully!", "create"));
 
+        return SUCCESS;
+    }
+
+    @Action("update")
+    public String update() {
+        setJsonResponse(this.userService.validate(userRequest, "Update user's info Successfully!", "update"));
+
+        return SUCCESS;
+    }
+
+    @Action("get")
+    public String get() {
+        setJsonResponse(this.userService.getUser(userId));
         return SUCCESS;
     }
 
     @Action("delete")
     public void delete() {
-        long userId = Long.valueOf(request.getParameter("userId"));
+        long userId = Long.parseLong(request.getParameter("userId"));
         this.userService.deleteById(userId);
         System.out.println(userId);
     }
 
     @Action("lock")
     public void lock() {
-        long userId = Long.valueOf(request.getParameter("userId"));
+        long userId = Long.parseLong(request.getParameter("userId"));
         this.userService.lockById(userId);
         System.out.println(userId);
     }
