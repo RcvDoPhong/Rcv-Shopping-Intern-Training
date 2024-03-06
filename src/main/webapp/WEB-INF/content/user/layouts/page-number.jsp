@@ -4,7 +4,7 @@
         <ul class="pagination">
             <s:if test="(page - 1) > 0">
                 <li class="page-item">
-                    <a class="page-link" href="/user/users/?page=${page - 1}" rel="prev"
+                    <a class="page-link" href="/user/users/?${searchURL}page=${page - 1}" rel="prev"
                         aria-label="&laquo; Previous">&lsaquo;</a>
                 </li>
             </s:if>
@@ -23,7 +23,7 @@
                             </span>
                         </s:if>
                         <s:else>
-                            <a class="page-link" href="/user/users/?page=${pageLoop}">
+                            <a class="page-link" href="/user/users/?${searchURL}page=${pageLoop}">
                                 <s:property value="pageLoop" />
                             </a>
                         </s:else>
@@ -41,7 +41,7 @@
                                 </span>
                             </s:if>
                             <s:else>
-                                <a class="page-link" href="/user/users/?page=${pageLoop}">
+                                <a class="page-link" href="/user/users/?${searchURL}page=${pageLoop}">
                                     <s:property value="pageLoop" />
                                 </a>
                             </s:else>
@@ -56,8 +56,8 @@
                     </a>
                 </s:if>
                 <s:elseif test="(page > 7) && (page < (totalPage - 6))">
-                    <a class="page-link" href="/user/users/?page=1">1</a>
-                    <a class="page-link" href="/user/users/?page=2">2</a>
+                    <a class="page-link" href="/user/users/?${searchURL}page=1">1</a>
+                    <a class="page-link" href="/user/users/?${searchURL}page=2">2</a>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
                     <s:iterator begin="page - 2" end="page + 2" var="pageLoop">
                         <li class='page-item <s:if test="page == #pageLoop">active</s:if>' aria-current="page">
@@ -67,23 +67,23 @@
                                 </span>
                             </s:if>
                             <s:else>
-                                <a class="page-link" href="/user/users/?page=${pageLoop}">
+                                <a class="page-link" href="/user/users/?${searchURL}page=${pageLoop}">
                                     <s:property value="pageLoop" />
                                 </a>
                             </s:else>
                         </li>
                     </s:iterator>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
-                    <a class="page-link" href="/user/users/?page=${totalPage - 1}">
+                    <a class="page-link" href="/user/users/?${searchURL}page=${totalPage - 1}">
                         ${totalPage - 1}
                     </a>
-                    <a class="page-link" href="/user/users/?page=${totalPage}">
+                    <a class="page-link" href="/user/users/?${searchURL}page=${totalPage}">
                         ${totalPage}
                     </a>
                 </s:elseif>
                 <s:elseif test="(page > (totalPage - 9)) && ((totalPage > 13))">
-                    <a class="page-link" href="/user/users/?page=1">1</a>
-                    <a class="page-link" href="/user/users/?page=2">2</a>
+                    <a class="page-link" href="/user/users/?${searchURL}page=1">1</a>
+                    <a class="page-link" href="/user/users/?${searchURL}page=2">2</a>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
                     <s:iterator begin="totalPage - 9" end="totalPage" var="pageLoop">
                         <li class='page-item <s:if test="page == #pageLoop">active</s:if>' aria-current="page">
@@ -93,7 +93,7 @@
                                 </span>
                             </s:if>
                             <s:else>
-                                <a class="page-link" href="/user/users/?page=${pageLoop}">
+                                <a class="page-link" href="/user/users/?${searchURL}page=${pageLoop}">
                                     <s:property value="pageLoop" />
                                 </a>
                             </s:else>
@@ -104,7 +104,7 @@
             <%-- <s:property value="totalPage" /> --%>
             <s:if test="(page + 1) <= totalPage">
                 <li class="page-item">
-                    <a class="page-link" href="/user/users/?page=${page + 1}" rel="next"
+                    <a class="page-link" href="/user/users/?${searchURL}page=${page + 1}" rel="next"
                         aria-label="Next &raquo;">&rsaquo;</a>
                 </li>
             </s:if>

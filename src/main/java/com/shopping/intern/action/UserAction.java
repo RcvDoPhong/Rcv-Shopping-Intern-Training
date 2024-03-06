@@ -22,10 +22,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.shopping.intern.model.Group;
 import com.shopping.intern.model.User;
 import com.shopping.intern.request.UserCreateUpdateRequest;
-import com.shopping.intern.service.Group.IGroupService;
 import com.shopping.intern.service.User.IUserService;
 
 @Namespace("/user/users")
@@ -45,13 +43,11 @@ public class UserAction extends ActionSupport {
 
     private IUserService userService;
 
-    private IGroupService groupService;
-
     private String requestURL;
 
     private List<User> userListPaginate;
 
-    private List<Group> groupList;
+    private String[] groupList = { "Admin", "Reviewer", "Editor" };
 
     private String[] statusList = { "Non-Active", "Active" };
 
@@ -68,13 +64,18 @@ public class UserAction extends ActionSupport {
 
     private long userId;
 
-    private String searchURL;
+    private StringBuilder searchURL = new StringBuilder();
 
     private ResponseEntity<String> jsonResponse;
 
-    public UserAction(IUserService userService, IGroupService groupService) {
+    private String userName;
+
+    private String email;
+
+    private String groupRole;
+
+    public UserAction(IUserService userService) {
         this.userService = userService;
-        this.groupService = groupService;
     }
 
     // User list
@@ -86,12 +87,11 @@ public class UserAction extends ActionSupport {
         this.userListPaginate = userListPaginate;
     }
 
-    // Group List
-    public List<Group> getGroupList() {
+    public String[] getGroupList() {
         return groupList;
     }
 
-    public void setGroupList(List<Group> groupList) {
+    public void setGroupList(String[] groupList) {
         this.groupList = groupList;
     }
 
@@ -173,12 +173,66 @@ public class UserAction extends ActionSupport {
         this.userSearchForm = userSearchForm;
     }
 
-    public String getSearchURL() {
+    public StringBuilder getSearchURL() {
         return searchURL;
     }
 
-    public void setSearchURL(String searchURL) {
+    public void setSearchURL(StringBuilder searchURL) {
         this.searchURL = searchURL;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getGroupRole() {
+        return groupRole;
+    }
+
+    public void setGroupRole(String groupRole) {
+        this.groupRole = groupRole;
+    }
+
+    public void getParamsURL() {
+        String nameParam = request.getParameter("userName");
+        String emailParam = request.getParameter("email");
+        String groupRoleParam = request.getParameter("groupRole");
+        String isActiveParam = request.getParameter("isActive");
+
+        User tempValue = new User();
+        if (nameParam != null) {
+            tempValue.setUserName(nameParam.equals("") ? null : nameParam);
+            searchURL.append("userName=" + nameParam + "&");
+        }
+
+        if (emailParam != null) {
+            tempValue.setEmail(emailParam.equals("") ? null : emailParam);
+            searchURL.append("email=" + emailParam + "&");
+        }
+
+        if (groupRoleParam != null) {
+            tempValue.setGroupRole(groupRoleParam.equals("") ? null : groupRoleParam);
+            searchURL.append("groupRole=" + groupRoleParam + "&");
+        }
+
+        if (isActiveParam != null) {
+            tempValue.setIsActive(isActiveParam.equals("") ? -1 : Byte.parseByte(isActiveParam));
+            searchURL.append("isActive=" + isActiveParam + "&");
+        }
+
+        setUserSearchForm(tempValue);
     }
 
     @Action("")
@@ -187,22 +241,16 @@ public class UserAction extends ActionSupport {
         requestURL = "users-management";
 
         String pageGet = request.getParameter("page");
-        HttpParameters params = ActionContext.getContext().getParameters();
 
-        // for (Object paramName : params.) {
-
-        // }
-        System.out.println(params);
-
+        getParamsURL();
         setPage(pageGet == null ? 1 : Integer.valueOf(page));
 
-        List<User> totalUsers = this.userService.findAll();
+        List<User> totalUsers = this.userService.findAll(userSearchForm);
         setTotalPage((int) Math.ceil((double) totalUsers.size() / amountForPage));
 
         int limitTake = (page - 1) * amountForPage;
 
         setUserListPaginate(this.userService.paginate(limitTake, amountForPage, userSearchForm));
-        setGroupList(this.groupService.findAll());
         return "index";
     }
 

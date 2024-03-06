@@ -19,13 +19,11 @@ public class User {
 
     private String verifyEmail = null;
 
-    private byte isActive = 1;
+    private byte isActive = -1;
 
     private byte isDelete = 0;
 
-    private int groupId;
-
-    private String groupName;
+    private String groupRole;
 
     private String lastLoginAt = null;
 
@@ -34,10 +32,6 @@ public class User {
     private Date createdAt = null;
 
     private Date updatedAt = null;
-
-    private int updatedBy;
-
-    private String updatedByUser;
 
     public User() {
     }
@@ -115,21 +109,12 @@ public class User {
     }
 
     // User's Group ID
-    public int getGroupId() {
-        return this.groupId;
+    public String getGroupRole() {
+        return this.groupRole;
     }
 
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
-
-    // User's Group Name
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setGroupRole(String groupRole) {
+        this.groupRole = groupRole;
     }
 
     // User's Last Login Info
@@ -164,23 +149,6 @@ public class User {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    // User's creator/updated by someone
-    public int getUpdatedBy() {
-        return this.updatedBy;
-    }
-
-    public void setUpdatedBy(int updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public String getUpdatedByUser() {
-        return updatedByUser;
-    }
-
-    public void setUpdatedByUser(String updatedByUser) {
-        this.updatedByUser = updatedByUser;
     }
 
     public boolean isActiveStatus() {

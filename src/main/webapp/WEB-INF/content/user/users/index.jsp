@@ -5,7 +5,7 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="name">Username</label>
-                    <input name="name" type="text" class="form-control d-flex" id="name" value="${userName}"
+                    <input name="userName" type="text" class="form-control d-flex" id="name" value="${userName}"
                         placeholder="Type name">
                 </div>
             </div>
@@ -19,12 +19,11 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="role">Group</label>
-                    <select name="groupId" class="custom-select">
+                    <select name="groupRole" class="custom-select">
                         <option value="">Select group</option>
-                        <s:property value="groupList" />
                         <s:iterator value="groupList" var="group">
-                            <option value="${group.groupId}">
-                                ${group.groupName}
+                            <option value="${group}" <s:if test="#group == #parameters.groupRole[0]">selected</s:if>>
+                                ${group}
                             </option>
                         </s:iterator>
                     </select>
@@ -35,27 +34,12 @@
                     <label class="mt-2 d-flex" for="is_active">Status</label>
                     <select name="isActive" class="custom-select" aria-label="Default
                         select example">
-                        <option value="-1">Select status</option>
+                        <option value="">Select status</option>
                         <s:iterator begin="0" end="statusList.length - 1" var="index">
-                            <option value="${index}">
+                            <option value="${index}" <s:if test="#index == #parameters.isActive[0]">selected</s:if>>
                                 ${statusList[index]}
                             </option>
                         </s:iterator>
-                    </select>
-                </div>
-            </div>
-            <div class="col-auto">
-                <div class="form-group">
-                    <label class="mt-2 d-flex" for="updated_by">Updated by</label>
-                    <select name="updatedBy" class="custom-select" aria-label="Default
-                        select example">
-                        <option value="">Select admin</option>
-                        <!-- @foreach (adminList() as $admin)
-                        <option value="{{ $admin->admin_id }}" @if (intval(request()->input('updated_by')) ===
-                            $admin->admin_id) selected @endif>
-                            {{ $admin->name }}
-                        </option>
-                        @endforeach -->
                     </select>
                 </div>
             </div>
@@ -89,7 +73,9 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-8 d-flex justify-content-start">
-                    <%@ include file="../layouts/page-number.jsp" %>
+                    <s:if test="totalPage > 1">
+                        <%@ include file="../layouts/page-number.jsp" %>
+                    </s:if>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
                     Display ${(currentPage * amountForPage) - amountForPage + 1} ~ ${currentPage * amountForPage} in
@@ -106,7 +92,6 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Status</th>
-                        <th>Updated By</th>
                         <th>Options</th>
                     </tr>
                 </thead>
@@ -122,7 +107,7 @@
                                     </a>
                                 </td>
                                 <td>${user.email}</td>
-                                <td>${user.groupName}</td>
+                                <td>${user.groupRole}</td>
                                 <td class="font-weight-bold">
                                     <s:if test="#user.isActive == 1">
                                         <span class="text-success">
@@ -135,7 +120,6 @@
                                         </span>
                                     </s:else>
                                 </td>
-                                <td>${user.updatedByUser}</td>
                                 <td>
                                     <div class="btn-group">
                                         <div>
@@ -178,7 +162,9 @@
         </div>
         <div class="card-footer">
             <div class="d-flex justify-content-end">
-                <%@ include file="../layouts/page-number.jsp" %>
+                <s:if test="totalPage > 1">
+                    <%@ include file="../layouts/page-number.jsp" %>
+                </s:if>
             </div>
         </div>
     </div>

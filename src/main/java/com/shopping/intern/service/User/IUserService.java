@@ -13,7 +13,7 @@ public interface IUserService {
 
     List<User> paginate(int currentPage, int perPage, User userSearchForm);
 
-    List<User> findAll();
+    List<User> findAll(User userSearchForm);
 
     User get(long userId);
 

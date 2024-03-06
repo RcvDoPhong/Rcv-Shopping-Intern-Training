@@ -1,9 +1,11 @@
 const user = {
     resetSelectInput: function () {
         $("#userCreationForm").find("input").val("");
-        $("#userCreationForm").find("select").val("-1");
+        $("select#status").val("");
+        $("select#group").val("");
     },
     renderModal: function (targetButton) {
+        user.clearError();
         user.resetSelectInput();
         $("#submitButton").attr("onclick", "user.createUser(this)");
         const modal = $(targetButton).data("modal");
@@ -60,6 +62,7 @@ const user = {
         event.preventDefault();
 
         user.resetSelectInput();
+        user.clearError();
 
         const modal = $(targetButton).data("modal");
         const userId = $(targetButton).data("id");
@@ -73,8 +76,8 @@ const user = {
                 const data = jsonResponse.data;
 
                 $.each(data, function(title, value) {
-                    $(`input#${title}`).val(value);
-                    $(`select#${title}`).val(value);
+                    $("form#userCreationForm").find(`input#${title}`).val(value);
+                    $("form#userCreationForm").find(`select#${title}`).val(value);
                     console.log(title, value);
                 })
 

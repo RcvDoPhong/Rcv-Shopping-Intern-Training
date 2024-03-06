@@ -40,12 +40,12 @@
                                     <label class="mt-2">Group</label>
                                 </div>
                                 <div class="col-md">
-                                    <select class="form-control" name="userRequest.groupId" id="group">
-                                        <option value="-1" selected>Select group</option>
+                                    <select class="form-control" name="userRequest.groupRole" id="group">
+                                        <option value="" selected>Select group</option>
                                         <span id="ogSelectValues">
                                             <s:iterator value="groupList" var="group">
-                                                <option value="${group.groupId}">
-                                                    ${group.groupName}
+                                                <option value="${group}">
+                                                    ${group}
                                                 </option>
                                             </s:iterator>
                                         </span>
