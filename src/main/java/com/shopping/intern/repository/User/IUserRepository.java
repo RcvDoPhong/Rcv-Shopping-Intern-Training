@@ -7,11 +7,13 @@ import com.shopping.intern.request.UserLoginRequest;
 
 public interface IUserRepository {
 
-    List<User> findAll(boolean paginate, int currentPage, int perPage);
+    List<User> findAll(boolean paginate, int currentPage, int perPage, User userSearchForm);
 
     User findById(long userId);
 
     User findByEmail(String email);
+
+    User findByEmailWithException(String email, long userId);
 
     void insert(User user);
 
@@ -22,4 +24,6 @@ public interface IUserRepository {
     void deleteById(long userId);
 
     User findByName(String name);
+
+    User find(String value, String column, long userId);
 }

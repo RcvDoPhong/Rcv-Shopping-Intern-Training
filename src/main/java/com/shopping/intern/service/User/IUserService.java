@@ -11,19 +11,13 @@ import com.shopping.intern.request.UserLoginRequest;
 
 public interface IUserService {
 
-    List<User> paginate(int currentPage, int perPage);
+    List<User> paginate(int currentPage, int perPage, User userSearchForm);
 
     List<User> findAll();
 
-    User findById(long userId);
+    User get(long userId);
 
-    User findByEmail(String email);
-
-    // boolean existByEmail(String email);
-
-    void insert(User user);
-
-    void update(User user);
+    ResponseEntity<String> getUser(long userId);
 
     void deleteById(long userId);
 
@@ -35,5 +29,5 @@ public interface IUserService {
 
     void storeTempValueLoginFail(UserLoginRequest userLoginRequest);
 
-    ResponseEntity<String> validate(UserCreateUpdateRequest userRequest);
+    ResponseEntity<String> validate(User userRequest, String message, String createType);
 }

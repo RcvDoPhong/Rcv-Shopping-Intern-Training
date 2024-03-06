@@ -1,5 +1,8 @@
 package com.shopping.intern.request;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserCreateUpdateRequest {
     private String userName;
 
@@ -8,6 +11,23 @@ public class UserCreateUpdateRequest {
     private long groupId = 0;
 
     private long isActive = -1;
+
+    private Map<String, String> validateMap = new HashMap<>();
+
+    public Map<String, String> getValidateMap() {
+        return validateMap;
+    }
+
+    public void setValidateMap(Map<String, String> validateMap) {
+        this.validateMap = validateMap;
+    }
+
+    public UserCreateUpdateRequest() {
+        this.validateMap.put("name", "required|min:String:6:is too short|max:String:100:is too long|unique:user_name");
+        this.validateMap.put("email", "required|email|unique:email");
+        this.validateMap.put("group", "required");
+        this.validateMap.put("status", "required");
+    }
 
     public String getUserName() {
         return userName;
