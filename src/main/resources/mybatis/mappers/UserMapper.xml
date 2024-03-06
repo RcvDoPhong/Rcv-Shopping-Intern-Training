@@ -2,28 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shopping.intern.mapper.UserMapper">
     <sql id="Base_Column_List">
-        mst_users.user_id, mst_users.user_name, mst_users.email, mst_users.password,
-        mst_users.is_active, mst_users.is_delete, mst_users.group_id,
-        mst_users.updated_by, mst_users.created_at, mst_users.updated_at
+        user_id, user_name, email, password,
+        is_active, is_delete, group_role,
+        created_at, updated_at
     </sql>
     <select id="findAll" resultType="User">
-        SELECT <include refid="Base_Column_List" />, mst_groups.group_name as group_name, users.user_name as updated_by_user
+        SELECT <include refid="Base_Column_List" />
         FROM mst_users
-        INNER JOIN mst_groups ON mst_users.group_id = mst_groups.group_id
-        LEFT JOIN mst_users AS users ON mst_users.updated_by = users.user_id
-        WHERE mst_users.is_delete != 1
-        <!-- <if test="userName != null">
-            AND mst_users.user_name LIKE "%#{userName}%"
+        WHERE is_delete != 1
+        <if test="userSearchForm.userName != null">
+            <bind name="searchUserName" value="'%' + userSearchForm.userName + '%'" />
+            AND user_name LIKE #{searchUserName}
         </if>
-        <if test="email != null">
-            AND mst_users.email LIKE "%#{email}%"
+        <if test="userSearchForm.email != null">
+            <bind name="searchEmail" value="'%' + userSearchForm.email + '%'" />
+            AND email LIKE #{searchEmail}
         </if>
-        <if test="groupId != 0">
-            AND mst_users.group_id = #{groupId}
+        <if test="userSearchForm.groupRole != null">
+            AND group_role = #{userSearchForm.groupRole}
         </if>
-        <if test="isActive != 0">
-            AND mst_users.is_active = #{isActive}
-        </if> -->
+        <if test="userSearchForm.isActive != -1">
+            AND is_active = #{userSearchForm.isActive}
+        </if>
         <if test="paginate == true">
             LIMIT #{currentPage}, ${perPage}
         </if>
@@ -33,8 +33,8 @@
     </select>
     <insert id="insert">
         INSERT INTO
-        mst_users(user_name, email, password, group_id, updated_by)
-        VALUES (#{userName}, #{email}, #{password}, #{groupId}, #{updatedBy})
+        mst_users(user_name, email, password, group_role, is_active)
+        VALUES (#{userName}, #{email}, #{password}, #{groupRole}, #{isActive})
     </insert>
     <select id="findById" resultType="User">
         SELECT <include refid="Base_Column_List" />
@@ -55,7 +55,7 @@
     </select>
     <update id="update">
         UPDATE mst_users SET
-        user_name=#{userName}, email=#{email}, group_id=#{groupId}, updated_by=#{updatedBy}
+        user_name=#{userName}, email=#{email}, group_role=#{groupRole}, is_active=#{isActive}
         WHERE user_id = #{userId}
     </update>
     <update id="lockById">

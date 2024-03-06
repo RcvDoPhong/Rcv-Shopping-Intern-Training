@@ -8,7 +8,7 @@ public class UserCreateUpdateRequest {
 
     private String email;
 
-    private long groupId = 0;
+    private String groupRole = "";
 
     private long isActive = -1;
 
@@ -45,12 +45,12 @@ public class UserCreateUpdateRequest {
         this.email = email;
     }
 
-    public long getGroupId() {
-        return groupId;
+    public String getGroupRole() {
+        return groupRole;
     }
 
-    public void setGroupId(long groupId) {
-        this.groupId = groupId;
+    public void setGroupRole(String groupRole) {
+        this.groupRole = groupRole;
     }
 
     public long getIsActive() {

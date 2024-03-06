@@ -63,8 +63,8 @@ public class UserService implements IUserService {
         return this.userRepo.findAll(true, currentPage, perPage, userSearchForm);
     }
 
-    public List<User> findAll() {
-        return this.userRepo.findAll(false, 0, 0, null);
+    public List<User> findAll(User userSearchForm) {
+        return this.userRepo.findAll(false, 0, 0, userSearchForm);
     }
 
     public User get(long userId) {
@@ -79,7 +79,7 @@ public class UserService implements IUserService {
         responseUser.put("userId", userGet.getUserId());
         responseUser.put("name", userGet.getUserName());
         responseUser.put("email", userGet.getEmail());
-        responseUser.put("group", userGet.getGroupId());
+        responseUser.put("group", userGet.getGroupRole());
         responseUser.put("status", userGet.getIsActive());
 
         response.put("data", responseUser);
@@ -122,12 +122,11 @@ public class UserService implements IUserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
         String passwordEncode = encoder.encode("password");
         userRequest.setPassword(passwordEncode);
-        userRequest.setUpdatedBy(1);
         this.userRepo.insert(userRequest);
     }
 
     public void handleUpdateUser(User userRequest) {
-        userRequest.setUpdatedBy(1);
+        System.out.println(userRequest.getGroupRole() + " " + userRequest.getIsActive());
         this.userRepo.update(userRequest);
     }
 
@@ -142,7 +141,7 @@ public class UserService implements IUserService {
                 userRequest.getUserName(), "name",
                 response, userRequest.getUserId());
         boolean validateGroupFail = validateSingleField(validateMap.getValidateMap(),
-                String.valueOf(userRequest.getGroupId()), "group", response, userRequest.getUserId());
+                String.valueOf(userRequest.getGroupRole()), "group", response, userRequest.getUserId());
         boolean validateStatusFail = validateSingleField(validateMap.getValidateMap(),
                 String.valueOf(userRequest.getIsActive()), "status", response, userRequest.getUserId());
 
