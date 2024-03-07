@@ -51,9 +51,12 @@ const common = {
         });
     },
     handleCreateUpdate: function(event, targetBtn, targetForm = '#handleFormInfo') {
-        event.preventDefault();
+        // event.preventDefault();
         common.clearErrorInput(targetForm);
         const data = new FormData($(`form${targetForm}`)[0]);
+        for (var pair of data.entries()) {
+            console.log(pair[0], pair[1]);
+        }
 
         const url = $(`form${targetForm}`).attr('action');
         this.handleSubmitAjax(url, targetBtn, data);
@@ -69,14 +72,16 @@ const common = {
             contentType: false,
             statusCode: {
                 422: function (error) {
-                    $.each(error.responseJSON.errors, function (key, value) {
-                        $(`span[name="${key}"]`).text(value);
-                        $(`input[name="${key}"]`).addClass('is-invalid');
-                        $(`select[name="${key}"]`).addClass('is-invalid');
-                    })
+                    console.log(error)
+                    // $.each(error.responseJSON.errors, function (key, value) {
+                    //     $(`span[name="${key}"]`).text(value);
+                    //     $(`input[name="${key}"]`).addClass('is-invalid');
+                    //     $(`select[name="${key}"]`).addClass('is-invalid');
+                    // })
                 },
                 200: function (response) {
-                    common.sweetAlertNoButton(response.title, response.message, 'success', response.redirect)
+                    console.log(response);
+                    // common.sweetAlertNoButton(response.title, response.message, 'success', response.redirect)
                 }
             }
         }).fail(function (error) {

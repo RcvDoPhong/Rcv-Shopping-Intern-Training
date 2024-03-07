@@ -11,21 +11,21 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
                     <a href="/user/dashboard"
-                        class="nav-link <s:if test='requestURL == "dashboard"'>active</s:if>">
+                        class="nav-link <s:if test='requestUrl == "dashboard"'>active</s:if>">
                         <i class="fas fa-home mr-2"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/user/users"
-                        class="nav-link  <s:if test='requestURL == "users-management"'>active</s:if>">
+                        class="nav-link  <s:if test='requestUrl == "users"'>active</s:if>">
                         <i class="fas fa-users mr-2"></i>
                         <p>Users</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#"
-                        class="nav-link  <s:if test='requestURL == "products"'>active</s:if>">
+                    <a href="/user/products"
+                        class="nav-link  <s:if test='requestUrl == "products"'>active</s:if>">
                         <i class="fas fa-box mr-2"></i>
                         <p>Products</p>
                     </a>

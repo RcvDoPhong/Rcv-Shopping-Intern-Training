@@ -38,12 +38,10 @@ public class AuthenticateInterceptor implements Interceptor {
         // Is there a "user" object stored in the user's HttpSession?
         Object email = session.getAttribute(EMAIL_SESSION);
         if (email == null) {
-            System.out.println("Check in auth interceptor: " + session.getAttribute("email"));
             // The user has not logged in yet.
 
             /* The user is attempting to log in. */
             if (invocation.getAction().getClass().equals(LoginAction.class)) {
-                System.out.println("Check in auth interceptor: " + session.getAttribute("email"));
                 return invocation.invoke();
             }
             return "loginRedirect";

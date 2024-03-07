@@ -10,10 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.Response;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.interceptor.SessionAware;
 import org.apache.struts2.tiles.annotation.TilesDefinition;
 import org.apache.struts2.tiles.annotation.TilesDefinitions;
 import org.json.JSONObject;
@@ -35,7 +38,7 @@ import com.shopping.intern.service.User.IUserService;
         @TilesDefinition(name = "users", extend = "masterLayout")
 })
 // @InterceptorRefs({
-// @InterceptorRef(value = "authSecureStack")
+//     @InterceptorRef(value = "authSecureStack")
 // })
 public class UserAction extends ActionSupport {
 
@@ -43,7 +46,7 @@ public class UserAction extends ActionSupport {
 
     private IUserService userService;
 
-    private String requestURL;
+    private String requestUrl;
 
     private List<User> userListPaginate;
 
@@ -51,28 +54,31 @@ public class UserAction extends ActionSupport {
 
     private String[] statusList = { "Non-Active", "Active" };
 
-    // private UserCreateUpdateRequest userRequest;
     private User userRequest;
 
     private User userSearchForm;
 
     private int page;
 
-    private int amountForPage = 5;
+    private String changePageAction = "/user/users/";
+
+    private int amountForPage = 10;
 
     private int totalPage;
-
-    private long userId;
 
     private StringBuilder searchURL = new StringBuilder();
 
     private ResponseEntity<String> jsonResponse;
+
+    private long userId;
 
     private String userName;
 
     private String email;
 
     private String groupRole;
+
+    private byte isActive = -1;
 
     public UserAction(IUserService userService) {
         this.userService = userService;
@@ -96,12 +102,12 @@ public class UserAction extends ActionSupport {
     }
 
     // Request URL
-    public String getRequestURL() {
-        return requestURL;
+    public String getRequestUrl() {
+        return requestUrl;
     }
 
-    public void setRequestURL(String requestURL) {
-        this.requestURL = requestURL;
+    public void setRequestUrl(String requestUrl) {
+        this.requestUrl = requestUrl;
     }
 
     // Current page
@@ -157,14 +163,6 @@ public class UserAction extends ActionSupport {
         this.jsonResponse = jsonResponse;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
     public User getUserSearchForm() {
         return userSearchForm;
     }
@@ -205,45 +203,59 @@ public class UserAction extends ActionSupport {
         this.groupRole = groupRole;
     }
 
+    public byte getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(byte isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getChangePageAction() {
+        return changePageAction;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
     public void getParamsURL() {
-        String nameParam = request.getParameter("userName");
-        String emailParam = request.getParameter("email");
-        String groupRoleParam = request.getParameter("groupRole");
-        String isActiveParam = request.getParameter("isActive");
-
         User tempValue = new User();
-        if (nameParam != null) {
-            tempValue.setUserName(nameParam.equals("") ? null : nameParam);
-            searchURL.append("userName=" + nameParam + "&");
+        if (userName != null) {
+            tempValue.setUserName(userName.equals("") ? null : userName);
+            searchURL.append("userName=" + userName + "&");
         }
 
-        if (emailParam != null) {
-            tempValue.setEmail(emailParam.equals("") ? null : emailParam);
-            searchURL.append("email=" + emailParam + "&");
+        if (email != null) {
+            tempValue.setEmail(email.equals("") ? null : email);
+            searchURL.append("email=" + email + "&");
         }
 
-        if (groupRoleParam != null) {
-            tempValue.setGroupRole(groupRoleParam.equals("") ? null : groupRoleParam);
-            searchURL.append("groupRole=" + groupRoleParam + "&");
+        if (groupRole != null) {
+            tempValue.setGroupRole(groupRole.equals("") ? null : groupRole);
+            searchURL.append("groupRole=" + groupRole + "&");
         }
 
-        if (isActiveParam != null) {
-            tempValue.setIsActive(isActiveParam.equals("") ? -1 : Byte.parseByte(isActiveParam));
-            searchURL.append("isActive=" + isActiveParam + "&");
+        if (isActive != -1) {
+            tempValue.setIsActive(isActive);
+            searchURL.append("isActive=" + isActive + "&");
         }
 
         setUserSearchForm(tempValue);
     }
 
     @Action("")
-    @Override
-    public String execute() {
-        requestURL = "users-management";
+    public String index() {
+        setRequestUrl("users");
 
         String pageGet = request.getParameter("page");
 
         getParamsURL();
-        setPage(pageGet == null ? 1 : Integer.valueOf(page));
+        setPage(pageGet == null ? 1 : Integer.parseInt(pageGet));
 
         List<User> totalUsers = this.userService.findAll(userSearchForm);
         setTotalPage((int) Math.ceil((double) totalUsers.size() / amountForPage));
@@ -276,16 +288,12 @@ public class UserAction extends ActionSupport {
 
     @Action("delete")
     public void delete() {
-        long userId = Long.parseLong(request.getParameter("userId"));
         this.userService.deleteById(userId);
-        System.out.println(userId);
     }
 
     @Action("lock")
     public void lock() {
-        long userId = Long.parseLong(request.getParameter("userId"));
         this.userService.lockById(userId);
-        System.out.println(userId);
     }
 
     @Action("logout")

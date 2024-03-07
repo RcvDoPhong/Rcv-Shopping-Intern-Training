@@ -1,7 +1,7 @@
 package com.shopping.intern.mapper;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,7 +10,7 @@ import com.shopping.intern.model.User;
 @Mapper
 public interface UserMapper {
 
-    ArrayList<User> findAll(boolean paginate, int currentPage, int perPage, User userSearchForm);
+    List<User> findAll(boolean paginate, int currentPage, int perPage, User userSearchForm);
 
     User findById(long userId);
 

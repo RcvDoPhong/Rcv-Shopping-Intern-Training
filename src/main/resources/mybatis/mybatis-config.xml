@@ -7,5 +7,6 @@
 
     <typeAliases>
         <typeAlias type="com.shopping.intern.model.User" alias="User"/>
+        <typeAlias type="com.shopping.intern.model.Product" alias="Product"/>
     </typeAliases>
 </configuration>

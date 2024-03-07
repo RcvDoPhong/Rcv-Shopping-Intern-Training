@@ -5,14 +5,14 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="name">Username</label>
-                    <input name="userName" type="text" class="form-control d-flex" id="name" value="${userName}"
+                    <input name="userName" type="text" class="form-control d-flex" id="name" value="${param.userName}"
                         placeholder="Type name">
                 </div>
             </div>
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="email">Email</label>
-                    <input name="email" type="text" class="form-control d-flex" id="email" value="${email}"
+                    <input name="email" type="text" class="form-control d-flex" id="email" value="${param.email}"
                         placeholder="Type email">
                 </div>
             </div>
@@ -32,9 +32,8 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="is_active">Status</label>
-                    <select name="isActive" class="custom-select" aria-label="Default
-                        select example">
-                        <option value="">Select status</option>
+                    <select name="isActive" class="custom-select">
+                        <option value="-1">Select status</option>
                         <s:iterator begin="0" end="statusList.length - 1" var="index">
                             <option value="${index}" <s:if test="#index == #parameters.isActive[0]">selected</s:if>>
                                 ${statusList[index]}
@@ -78,7 +77,7 @@
                     </s:if>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    Display ${(currentPage * amountForPage) - amountForPage + 1} ~ ${currentPage * amountForPage} in
+                    Display ${(page * amountForPage) - amountForPage + 1} ~ ${page * amountForPage} in
                     total of ${userListPaginate.size()} users
                 </div>
             </div>
@@ -102,7 +101,8 @@
                             <tr>
                                 <td>${user.userId}</td>
                                 <td>
-                                    <a href="#" class="text-decoration-none">
+                                    <a href="#" class="text-decoration-none" data-id="${user.userId}"
+                                    data-modal="#modalGlobal" onclick="user.displayUser(this, event)">
                                         ${user.userName}
                                     </a>
                                 </td>

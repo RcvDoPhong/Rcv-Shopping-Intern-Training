@@ -23,8 +23,8 @@ public class UserCreateUpdateRequest {
     }
 
     public UserCreateUpdateRequest() {
-        this.validateMap.put("name", "required|min:String:6:is too short|max:String:100:is too long|unique:user_name");
-        this.validateMap.put("email", "required|email|unique:email");
+        this.validateMap.put("name", "required|min:String:6|max:String:100|unique:users:user_name");
+        this.validateMap.put("email", "required|email|unique:users:email");
         this.validateMap.put("group", "required");
         this.validateMap.put("status", "required");
     }

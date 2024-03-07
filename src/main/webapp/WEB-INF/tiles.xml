@@ -18,4 +18,14 @@
         <put-attribute name="body" value="/WEB-INF/content/user/users/index.jsp" />
     </definition>
 
+    <definition name="products" extends="masterLayout">
+        <put-attribute name="title" value="Products Management" />
+        <put-attribute name="body" value="/WEB-INF/content/user/products/index.jsp" />
+    </definition>
+
+    <definition name="createProduct" extends="masterLayout">
+        <put-attribute name="title" value="Create new product" />
+        <put-attribute name="body" value="/WEB-INF/content/user/products/create.jsp" />
+    </definition>
+
 </tiles-definitions>

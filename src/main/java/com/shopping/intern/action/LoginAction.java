@@ -1,27 +1,13 @@
 package com.shopping.intern.action;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
 import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.tiles.annotation.TilesDefinition;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.validator.annotations.EmailValidator;
-import com.opensymphony.xwork2.validator.annotations.IntRangeFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.ValidatorType;
-import com.shopping.intern.helper.Helper;
-import com.shopping.intern.helper.RouteHelper;
 import com.shopping.intern.model.User;
 import com.shopping.intern.request.UserLoginRequest;
 import com.shopping.intern.service.User.IUserService;
@@ -79,7 +65,6 @@ public class LoginAction extends ActionSupport {
         @InterceptorRef(value = "store", params = {"operationMode", "RETRIEVE"})
     })
     public String loginView() {
-        System.out.println("Email in session: " + ActionContext.getContext().getSession().get("email"));
         return "input";
     }
 
