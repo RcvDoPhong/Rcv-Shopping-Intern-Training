@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopping.intern.mapper.ProductMapper">
+    <sql id="Base_Column_List">
+        product_id, product_uid, product_name, product_image, product_price,
+        is_sales, description, created_at, updated_at
+    </sql>
+    <select id="findAll" resultType="Product">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_products
+        WHERE product_id != ""
+        <if test="productForm.productName != null">
+            <bind name="searchProductName" value="'%' + productForm.productName + '%'" />
+            AND product_name LIKE #{searchProductName}
+        </if>
+        <if test="productForm.productFromPrice != null">
+            AND product_price &gt;= ${productForm.productFromPrice}
+        </if>
+        <if test="productForm.productToPrice != null">
+            AND product_price &lt;= ${productForm.productToPrice}
+        </if>
+        <if test="productForm.isSales != -1">
+            AND is_sales = ${productForm.isSales}
+        </if>
+        <if test="paginate == true">
+            LIMIT #{currentPage}, ${perPage}
+        </if>
+    </select>
+    <insert id="insert">
+        INSERT INTO
+        mst_products(product_name, product_image, product_price, is_sales, description)
+        VALUES (#{productName}, #{productImage}, #{productPrice}, #{isSale}, #{description})
+    </insert>
+    <select id="findById" resultType="Product">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_products WHERE product_id = #{productId}
+    </select>
+    <select id="findByUid" resultType="Product">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_products WHERE product_uid = #{productUid}
+    </select>
+    <select id="findByName" resultType="Product">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_products
+        WHERE product_name=#{productName}
+    </select>
+    <update id="update">
+        UPDATE mst_products SET
+        product_name = #{productName}, product_image = #{productImage}, product_price = #{productPrice},
+        is_sales = #{isSales}, description = #{description}
+        WHERE product_id = #{productId}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM mst_products WHERE product_id = #{productId}
+    </delete>
+</mapper>

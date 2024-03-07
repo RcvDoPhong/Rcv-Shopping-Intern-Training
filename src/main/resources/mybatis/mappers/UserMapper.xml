@@ -28,9 +28,6 @@
             LIMIT #{currentPage}, ${perPage}
         </if>
     </select>
-    <select id="existByEmail" resultType="boolean">
-        SELECT EXISTS (SELECT email FROM mst_users WHERE email=${email})
-    </select>
     <insert id="insert">
         INSERT INTO
         mst_users(user_name, email, password, group_role, is_active)

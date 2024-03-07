@@ -20,25 +20,4 @@ public class ShoppingIntern extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(ShoppingIntern.class, args);
     }
-
-    // private final UserMapper userMapper;
-
-    // public ShoppingIntern(UserMapper userMapper)  {
-    //     this.userMapper = userMapper;
-    // }
-
-    @Bean
-    CommandLineRunner sampleCommandLineRunner() {
-        return args -> {
-            // Employee employee = new Employee("Mario 10", "Bros 32", "mario_bros_22@email.com");
-            // Employee employee = this.employeeMapper.findById(1);
-            // List<Employee> employee = this.employeeMapper.findAll();
-            // employee.setId(1);
-            // employee.setFirstName("Luigi");
-            // employee.setLastName("Bros 2");
-            // employee.setEmailAddress("luigi_bros@email.com");
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-            System.out.println("Password: " + encoder.encode("password"));
-        };
-    }
 }

@@ -9,11 +9,15 @@
     <!-- <constant name="struts.action.extension" value=""/> -->
     <constant name="struts.convention.default.parent.package" value="default" />
 
+    <constant name="struts.multipart.maxSize" value="1000000" />
+    <constant name="struts.multipart.saveDir"
+        value="C:\laragon\www\shopping-training-project\src\main\resources\static\user\images" />
+
     <package name="default" extends="struts-default">
 
         <result-types>
             <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" />
-            <result-type name="json" class="org.apache.struts2.json.JSONResult"/>
+            <result-type name="json" class="org.apache.struts2.json.JSONResult" />
         </result-types>
 
         <interceptors>
@@ -40,7 +44,7 @@
             </result>
             <result name="homeRedirect" type="redirectAction">
                 <param name="actionName">dashboard</param>
-                <param name="namespace">/user/users</param>
+                <param name="namespace">/user</param>
             </result>
         </global-results>
 

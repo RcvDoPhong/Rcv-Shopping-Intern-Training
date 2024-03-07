@@ -28,7 +28,6 @@
                                             class="form-control" name="user.email"
                                             placeholder="Email">
                                         <%
-                                            System.out.println(request.getRequestURL());
                                             if (session.getAttribute("email") != null) {
                                                 session.removeAttribute("email");
                                             }

@@ -1,7 +1,7 @@
 const user = {
     resetSelectInput: function () {
         $("#userCreationForm").find("input").val("");
-        $("select#status").val("");
+        $("select#status").val("-1");
         $("select#group").val("");
     },
     renderModal: function (targetButton) {
