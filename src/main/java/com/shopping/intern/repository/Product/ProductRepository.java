@@ -26,19 +26,39 @@ public class ProductRepository implements IProductRepository {
         this.productMapper.insert(product);
     }
 
-    public Product findById(long productId) {
+    public Product findById(String productId) {
         return this.productMapper.findById(productId);
     }
 
     public Product findByName(String productName) {
-        return this.findByName(productName);
+        return this.productMapper.findByName(productName, null);
+    }
+
+    public Product findByNameWithException(String productName, String productId) {
+        return this.productMapper.findByName(productName, productId);
     }
 
     public void update(Product product) {
         this.productMapper.update(product);
     }
 
-    public void deleteById(long productId) {
+    public void deleteById(String productId) {
         this.productMapper.deleteById(productId);
+    }
+
+    public Product find(String value, String column, String productId) {
+        switch (column) {
+            case "product_id":
+                return this.findById(productId);
+
+            case "product_name":
+                if (productId == null) {
+                    return this.findByName(value);
+                }
+                return this.findByNameWithException(value, productId);
+        
+            default:
+                return null;
+        }
     }
 }

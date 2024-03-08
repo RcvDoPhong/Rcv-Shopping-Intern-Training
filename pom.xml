@@ -171,6 +171,12 @@
 			<version>2.5.20</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.jgeppert.struts2.bootstrap</groupId>
+			<artifactId>struts2-bootstrap-plugin</artifactId>
+			<version>5.0.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

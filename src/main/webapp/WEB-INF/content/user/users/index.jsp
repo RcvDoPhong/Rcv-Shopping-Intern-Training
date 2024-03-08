@@ -33,7 +33,7 @@
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="is_active">Status</label>
                     <select name="isActive" class="custom-select">
-                        <option value="-1">Select status</option>
+                        <option value="">Select status</option>
                         <s:iterator begin="0" end="statusList.length - 1" var="index">
                             <option value="${index}" <s:if test="#index == #parameters.isActive[0]">selected</s:if>>
                                 ${statusList[index]}

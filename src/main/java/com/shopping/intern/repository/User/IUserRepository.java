@@ -13,7 +13,7 @@ public interface IUserRepository {
 
     User findByEmail(String email);
 
-    User findByEmailWithException(String email, long userId);
+    User findByEmailWithException(String email, long id);
 
     void insert(User user);
 
@@ -25,5 +25,7 @@ public interface IUserRepository {
 
     User findByName(String name);
 
-    User find(String value, String column, long userId);
+    User findByNameWithException(String name, long id);
+
+    User find(String value, String column, long id);
 }

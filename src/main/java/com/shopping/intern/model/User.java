@@ -1,7 +1,5 @@
 package com.shopping.intern.model;
 
-import java.util.Date;
-
 public class User {
 
     // @Autowired
@@ -19,7 +17,7 @@ public class User {
 
     private String verifyEmail = null;
 
-    private byte isActive = -1;
+    private String isActive;
 
     private byte isDelete = 0;
 
@@ -29,9 +27,9 @@ public class User {
 
     private String lastLoginIp = null;
 
-    private Date createdAt = null;
+    private String createdAt = null;
 
-    private Date updatedAt = null;
+    private String updatedAt = null;
 
     public User() {
     }
@@ -91,11 +89,11 @@ public class User {
     }
 
     // User's Active state
-    public byte getIsActive() {
+    public String getIsActive() {
         return this.isActive;
     }
 
-    public void setIsActive(byte isActive) {
+    public void setIsActive(String isActive) {
         this.isActive = isActive;
     }
 
@@ -135,24 +133,24 @@ public class User {
     }
 
     // User's Created & Updated at Timestamp
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return this.createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public String getUpdatedAt() {
         return this.updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
     public boolean isActiveStatus() {
-        return getIsActive() == 1;
+        return getIsActive().equals(1);
     }
 
     // public List<User> selectAll() {

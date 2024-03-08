@@ -1,11 +1,15 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
-
+    <s:if test="hasActionErrors()">
+        <div class="mt-2 p-3 bg-danger text-white rounded">
+            <s:actionerror />
+        </div>
+    </s:if>
     <form action="/user/products/" method="GET" id="searchForm">
         <div class="row">
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="name">Product name</label>
-                    <input name="productName" type="text" class="form-control d-flex" id="productName"
+                    <input name="productName" type="text" class="form-control d-flex"
                         value="${param.productName}" placeholder="Type name">
                 </div>
             </div>
@@ -13,7 +17,7 @@
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="is_active">Status</label>
                     <select name="isSales" class="custom-select">
-                        <option value="-1">Select status</option>
+                        <option value="">Select status</option>
                         <s:iterator begin="0" end="statusList.length - 1" var="index">
                             <option value="${index}" <s:if test="#index == #parameters.isSales[0]">selected</s:if>>
                                 ${statusList[index]}
@@ -25,14 +29,14 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="email">From Price</label>
-                    <input name="fromPrice" type="text" class="form-control d-flex" id="fromPrice"
+                    <input name="fromPrice" type="text" class="form-control d-flex"
                         value="${param.fromPrice}" placeholder="Type from price range">
                 </div>
             </div>
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="email">To Price</label>
-                    <input name="toPrice" type="text" class="form-control d-flex" id="toPrice" value="${param.toPrice}"
+                    <input name="toPrice" type="text" class="form-control d-flex" value="${param.toPrice}"
                         placeholder="Type to price range">
                 </div>
             </div>
@@ -93,22 +97,23 @@
                         <s:iterator value="productListPaginate" var="product">
 
                             <tr>
+                                <td>${product.getProductIndex()}</td>
                                 <td>${product.productId}</td>
-                                <td>${product.productUid}</td>
                                 <td>
-                                    <a href="#" class="text-decoration-none">
+                                    <a href="/user/products/edit?productId=${product.productId}"
+                                        class="text-decoration-none">
                                         ${product.productName}
                                     </a>
                                 </td>
                                 <td>${product.cutDownDescriptionLength()}</td>
-                                <td>${product.productPrice}</td>
+                                <td>$${product.productPrice}</td>
                                 <td class="font-weight-bold">
                                     <s:if test="#product.isSales == 1">
                                         <span class="text-success">
                                             On sales
                                         </span>
                                     </s:if>
-                                    <s:elseif test="#Product.isSales == 2">
+                                    <s:elseif test="#product.isSales == 2">
                                         <span class="text-success">
                                             Out of stock
                                         </span>
@@ -122,7 +127,8 @@
                                 <td>
                                     <div class="btn-group">
                                         <div>
-                                            <a href="#" class="btn btn-primary text-white">
+                                            <a href="/user/products/edit?productId=${product.productId}"
+                                                class="btn btn-primary text-white">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         </div>

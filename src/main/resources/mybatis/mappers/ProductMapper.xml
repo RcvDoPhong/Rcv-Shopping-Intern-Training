@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shopping.intern.mapper.ProductMapper">
     <sql id="Base_Column_List">
-        product_id, product_uid, product_name, product_image, product_price,
+        product_id, product_name, product_image, product_price,
         is_sales, description, created_at, updated_at
     </sql>
     <select id="findAll" resultType="Product">
-        SELECT <include refid="Base_Column_List" />
+        SELECT <include refid="Base_Column_List" />, RIGHT(product_id, 9) AS index_col
         FROM mst_products
         WHERE product_id != ""
         <if test="productForm.productName != null">
@@ -19,35 +19,35 @@
         <if test="productForm.productToPrice != null">
             AND product_price &lt;= ${productForm.productToPrice}
         </if>
-        <if test="productForm.isSales != -1">
+        <if test="productForm.isSales != null">
             AND is_sales = ${productForm.isSales}
         </if>
+        ORDER BY updated_at desc
         <if test="paginate == true">
             LIMIT #{currentPage}, ${perPage}
         </if>
     </select>
     <insert id="insert">
         INSERT INTO
-        mst_products(product_name, product_image, product_price, is_sales, description)
-        VALUES (#{productName}, #{productImage}, #{productPrice}, #{isSale}, #{description})
+        mst_products(product_name, product_image, product_price, is_sales, description, created_at, updated_at)
+        VALUES (#{productName}, #{productImage}, #{productPrice}, #{isSales}, #{description}, #{createdAt}, #{updatedAt})
     </insert>
     <select id="findById" resultType="Product">
         SELECT <include refid="Base_Column_List" />
         FROM mst_products WHERE product_id = #{productId}
     </select>
-    <select id="findByUid" resultType="Product">
-        SELECT <include refid="Base_Column_List" />
-        FROM mst_products WHERE product_uid = #{productUid}
-    </select>
     <select id="findByName" resultType="Product">
         SELECT <include refid="Base_Column_List" />
         FROM mst_products
         WHERE product_name=#{productName}
+        <if test="productId != null">
+            AND product_id != #{productId}
+        </if>
     </select>
     <update id="update">
         UPDATE mst_products SET
         product_name = #{productName}, product_image = #{productImage}, product_price = #{productPrice},
-        is_sales = #{isSales}, description = #{description}
+        is_sales = #{isSales}, description = #{description}, updated_at = #{updatedAt}
         WHERE product_id = #{productId}
     </update>
     <delete id="deleteById">

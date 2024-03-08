@@ -21,17 +21,18 @@
         <if test="userSearchForm.groupRole != null">
             AND group_role = #{userSearchForm.groupRole}
         </if>
-        <if test="userSearchForm.isActive != -1">
+        <if test="userSearchForm.isActive != null">
             AND is_active = #{userSearchForm.isActive}
         </if>
+        ORDER BY updated_at DESC
         <if test="paginate == true">
             LIMIT #{currentPage}, ${perPage}
         </if>
     </select>
     <insert id="insert">
         INSERT INTO
-        mst_users(user_name, email, password, group_role, is_active)
-        VALUES (#{userName}, #{email}, #{password}, #{groupRole}, #{isActive})
+        mst_users(user_name, email, password, group_role, is_active, created_at, updated_at)
+        VALUES (#{userName}, #{email}, #{password}, #{groupRole}, #{isActive}, #{createdAt}, #{updatedAt})
     </insert>
     <select id="findById" resultType="User">
         SELECT <include refid="Base_Column_List" />
@@ -41,18 +42,22 @@
         SELECT <include refid="Base_Column_List" />
         FROM mst_users
         WHERE email=#{email}
-        <if test="userId != 0">
-            AND user_id != #{userId}
+        <if test="id != 0">
+            AND user_id != #{id}
         </if>
     </select>
     <select id="findByName" resultType="User">
         SELECT <include refid="Base_Column_List" />
         FROM mst_users
-        WHERE name=#{name}
+        WHERE user_name=#{name}
+        <if test="id != 0">
+            AND user_id != #{id}
+        </if>
     </select>
     <update id="update">
         UPDATE mst_users SET
-        user_name=#{userName}, email=#{email}, group_role=#{groupRole}, is_active=#{isActive}
+        user_name = #{userName}, email = #{email}, group_role = #{groupRole},
+        is_active = #{isActive}, updated_at = #{updatedAt}
         WHERE user_id = #{userId}
     </update>
     <update id="lockById">

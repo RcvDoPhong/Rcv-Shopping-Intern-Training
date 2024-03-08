@@ -27,8 +27,8 @@ public class UserRepository implements IUserRepository {
         return this.userMapper.findById(userId);
     }
 
-    public User findByEmailWithException(String email, long userId) {
-        return this.userMapper.findByEmail(email, userId);
+    public User findByEmailWithException(String email, long id) {
+        return this.userMapper.findByEmail(email, id);
     }
 
     public User findByEmail(String email) {
@@ -52,22 +52,32 @@ public class UserRepository implements IUserRepository {
     }
 
     public User findByName(String name) {
-        return this.userMapper.findByName(name);
+        return this.userMapper.findByName(name, 0);
     }
 
-    public User find(String value, String column, long userId) {
-        User user = null;
+    public User findByNameWithException(String name, long id) {
+        return this.userMapper.findByName(name, id);
+    }
+
+    public User find(String value, String column, long id) {
         switch (column) {
-            case "userId":
+            case "user_id":
                 return this.findById(Integer.parseInt(value));
 
-            case "name":
-                return this.findByName(value);
+            case "user_name":
+                if (id != 0) {
+                    return this.findByName(value);
+                }
+                return this.findByNameWithException(value, id);
 
             case "email":
-                return this.findByEmailWithException(value, userId);
-        }
+                if (id != 0) {
+                    return this.findByEmail(column);
+                }
+                return this.findByEmailWithException(value, id);
 
-        return user;
+            default:
+                return null;
+        }
     }
 }

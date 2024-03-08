@@ -4,31 +4,46 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.shopping.intern.model.User;
+import com.shopping.intern.repository.Product.IProductRepository;
 import com.shopping.intern.repository.User.IUserRepository;
 
 public class CustomValidation {
 
-    private int EMPTY_VALUE = 0;
+    private final String STRING_DATATYPE = "String";
+
+    private final String NUMBER_DATATYPE = "number";
 
     private IUserRepository userRepo;
 
-    private String emailValidateRegrex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+    private IProductRepository productRepo;
 
-    public CustomValidation() {
+    public IUserRepository getUserRepo() {
+        return userRepo;
     }
 
-    public CustomValidation(IUserRepository userRepo) {
+    public void setUserRepo(IUserRepository userRepo) {
         this.userRepo = userRepo;
     }
+
+    public IProductRepository getProductRepo() {
+        return productRepo;
+    }
+
+    public void setProductRepo(IProductRepository productRepo) {
+        this.productRepo = productRepo;
+    }
+
+    private String emailValidateRegrex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 
     public boolean validateSingleField(
             Map<String, String> validateMap,
             String value,
             String field,
             JSONObject response,
-            long userId) {
+            String id) {
         String[] conditions = validateMap.get(field).split("\\|");
         StringBuilder message = new StringBuilder();
         String fieldUppercase = field.substring(0, 1).toUpperCase() + field.substring(1);
@@ -38,16 +53,8 @@ public class CustomValidation {
             String[] condition = rule.split(":"); // "min:String:6 => "min", "String", "6", "is too short"
             switch (condition[0]) {
                 case "required":
-                    try {
-                        int newValue = Integer.parseInt(value);
-                        if (newValue < EMPTY_VALUE) {
-                            validateFail = true;
-                        }
-                    } catch (Exception e) {
-                        if (String.valueOf(value).equals("")) {
-                            validateFail = true;
-                        }
-
+                    if (String.valueOf(value).equals("")) {
+                        validateFail = true;
                     }
                     if (validateFail) {
                         message.append(fieldUppercase + " is empty" + "<br>");
@@ -55,15 +62,15 @@ public class CustomValidation {
                     break;
 
                 case "unique":
-                    String column = condition[1];
-                    String table = condition[2];
+                    String table = condition[1];
+                    String column = condition[2];
                     Object obj = null;
                     if (table.equals("users")) {
-                        obj = this.userRepo.find(String.valueOf(value), column, userId);
+                        obj = this.userRepo.find(String.valueOf(value), column, Integer.parseInt(id));
                     }
 
                     if (table.equals("products")) {
-                        //
+                        obj = this.productRepo.find(String.valueOf(value), column, id);
                     }
 
                     if (obj != null) {
@@ -81,23 +88,33 @@ public class CustomValidation {
                     }
                     break;
 
-                case "min":
+                case "min": // need to optimize
                     boolean validateMinFail = validateNumber(condition, String.valueOf(value), "min");
                     if (validateMinFail) {
                         validateFail = true;
                         String limitMin = condition[2];
-                        message.append(fieldUppercase + " is shorter than " + limitMin + " characters<br>"); // need to
-                                                                                                             // optimize
+                        String dataType = condition[1];
+
+                        if (dataType.equals(STRING_DATATYPE)) {
+                            message.append(fieldUppercase + " is shorter than " + limitMin + " characters<br>");
+                        } else if (dataType.equals(NUMBER_DATATYPE)) {
+                            message.append(fieldUppercase + " smaller than " + limitMin + "<br>");
+                        }
                     }
                     break;
 
-                case "max":
+                case "max": // need to optimize
                     boolean validateMaxFail = validateNumber(condition, String.valueOf(value), "max");
                     if (validateMaxFail) {
                         validateFail = true;
                         String limitMax = condition[2];
-                        message.append(fieldUppercase + " is more than " + limitMax + " characters<br>"); // need to
-                                                                                                          // optimize
+                        String dataType = condition[1];
+
+                        if (dataType.equals(STRING_DATATYPE)) {
+                            message.append(fieldUppercase + " is more than " + limitMax + " characters<br>");
+                        } else if (dataType.equals(NUMBER_DATATYPE)) {
+                            message.append(fieldUppercase + " is greater than " + "<br>");
+                        }
                     }
                     break;
 
@@ -115,19 +132,19 @@ public class CustomValidation {
 
     public boolean validateNumber(String[] condition, String value, String compareType) {
         String dataType = condition[1];
-        int dataLength = Integer.parseInt(condition[2]);
+        double dataLength = Double.parseDouble(condition[2]);
 
         boolean validateFail = false;
         switch (compareType) {
             case "min":
-                if ((dataType.equals("String") && value.length() < dataLength)
-                        || (dataType.equals("int") && Integer.parseInt(value) < dataLength))
+                if ((dataType.equals(STRING_DATATYPE) && value.length() < dataLength)
+                        || (dataType.equals(NUMBER_DATATYPE) && Double.parseDouble(value) < dataLength))
                     validateFail = true;
                 break;
 
             case "max":
-                if ((dataType.equals("String") && value.length() > dataLength)
-                        || (dataType.equals("int") && Integer.parseInt(value) > dataLength))
+                if ((dataType.equals(STRING_DATATYPE) && value.length() > dataLength)
+                        || (dataType.equals(NUMBER_DATATYPE) && Double.parseDouble(value) > dataLength))
                     validateFail = true;
                 break;
 
@@ -138,3 +155,4 @@ public class CustomValidation {
         return validateFail;
     }
 }
+

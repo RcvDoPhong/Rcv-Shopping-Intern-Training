@@ -10,11 +10,11 @@ public interface ProductMapper {
 
     void insert(Product product);
 
-    Product findById(long productId);
+    Product findById(String productId);
 
-    Product findByName(String productName);
+    Product findByName(String productName, String productId);
 
     void update(Product product);
 
-    void deleteById(long productId);
+    void deleteById(String productId);
 }

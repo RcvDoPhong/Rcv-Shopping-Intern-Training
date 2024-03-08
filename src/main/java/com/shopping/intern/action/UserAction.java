@@ -1,22 +1,14 @@
 package com.shopping.intern.action;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.catalina.connector.Response;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.InterceptorRef;
-import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
-import org.apache.struts2.dispatcher.HttpParameters;
-import org.apache.struts2.interceptor.SessionAware;
 import org.apache.struts2.tiles.annotation.TilesDefinition;
 import org.apache.struts2.tiles.annotation.TilesDefinitions;
 import org.json.JSONObject;
@@ -26,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shopping.intern.model.User;
-import com.shopping.intern.request.UserCreateUpdateRequest;
 import com.shopping.intern.service.User.IUserService;
 
 @Namespace("/user/users")
@@ -78,7 +69,9 @@ public class UserAction extends ActionSupport {
 
     private String groupRole;
 
-    private byte isActive = -1;
+    private String isActive;
+
+    private String messageResponse;
 
     public UserAction(IUserService userService) {
         this.userService = userService;
@@ -203,11 +196,11 @@ public class UserAction extends ActionSupport {
         this.groupRole = groupRole;
     }
 
-    public byte getIsActive() {
+    public String getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(byte isActive) {
+    public void setIsActive(String isActive) {
         this.isActive = isActive;
     }
 
@@ -221,6 +214,14 @@ public class UserAction extends ActionSupport {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public String getMessageResponse() {
+        return messageResponse;
+    }
+
+    public void setMessageResponse(String messageResponse) {
+        this.messageResponse = messageResponse;
     }
 
     public void getParamsURL() {
@@ -240,12 +241,19 @@ public class UserAction extends ActionSupport {
             searchURL.append("groupRole=" + groupRole + "&");
         }
 
-        if (isActive != -1) {
-            tempValue.setIsActive(isActive);
+        if (isActive != null) {
+            tempValue.setIsActive(isActive.equals("") ? null : isActive);
             searchURL.append("isActive=" + isActive + "&");
         }
 
         setUserSearchForm(tempValue);
+    }
+
+    public void setupMessageResponse(String message, long userId) {
+        JSONObject response = new JSONObject();
+        User userInfo = this.userService.get(userId);
+        response.put("message", String.format(message, userInfo.getUserName()));
+        setJsonResponse(new ResponseEntity<>(response.toString(), HttpStatus.OK));
     }
 
     @Action("")
@@ -287,13 +295,19 @@ public class UserAction extends ActionSupport {
     }
 
     @Action("delete")
-    public void delete() {
+    public String delete() {
+        setupMessageResponse("Delete %s successfully", userId);
         this.userService.deleteById(userId);
+
+        return SUCCESS;
     }
 
     @Action("lock")
-    public void lock() {
+    public String lock() {
+        setupMessageResponse("Lock %s successfully", userId);
         this.userService.lockById(userId);
+
+        return SUCCESS;
     }
 
     @Action("logout")
