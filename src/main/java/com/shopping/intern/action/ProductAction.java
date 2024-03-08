@@ -47,16 +47,6 @@ public class ProductAction extends ActionSupport {
 
     private Product productForm;
 
-    private String test;
-
-    public String getTest() {
-        return test;
-    }
-
-    public void setTest(String test) {
-        this.test = test;
-    }
-
     private int page;
 
     private int totalPage;
@@ -301,7 +291,7 @@ public class ProductAction extends ActionSupport {
     /* Store record in Database action */
     @Action("store")
     public String store() {
-        System.out.println("test " + test);
+        System.out.println("test " + productForm.getProductImage());
         System.out.println(productForm.getProductName());
         String message = "Create new product successfully";
         setJsonResponse(this.productService.handleCreateUpdate(productForm, message, "create"));
