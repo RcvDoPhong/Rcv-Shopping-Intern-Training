@@ -30,9 +30,11 @@ const common = {
                     data: form.serialize(),
                     url: form.attr('action')
                 }).done(function (response) {
-                    common.sweetAlertNoButton('Success!!', response.message, 'success', common.returnCurrentRoute())
+                    const jsonResponse = JSON.parse(response.jsonResponse.body);
+                    common.sweetAlertNoButton('Success!!', jsonResponse.message, 'success', common.returnCurrentRoute())
                 }).fail(function (error) {
-                    common.sweetAlertNoButton('Oops!!', error.responseJSON.message, 'error')
+                    const jsonResponse = JSON.parse(response.jsonResponse.body);
+                    common.sweetAlertNoButton('Oops!!', jsonResponse.message, 'error')
                 })
             }
         });
@@ -58,7 +60,7 @@ const common = {
             console.log(pair[0], pair[1]);
         }
 
-        const url = $(`form${targetForm}`).attr('action');
+        // const url = $(`form${targetForm}`).attr('action');
         this.handleSubmitAjax(url, targetBtn, data);
     },
     handleSubmitAjax: function (url, target, data) {

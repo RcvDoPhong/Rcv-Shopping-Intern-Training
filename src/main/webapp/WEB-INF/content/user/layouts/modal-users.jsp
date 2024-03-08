@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <form action="/user/users/create" method="POST" id="userCreationForm">
-                    <input type="hidden" name="userRequest.userId" id="userId" value="">
+                    <input type="hidden" name="userRequest.userId" id="userId" value="0">
                     <div id="content">
                         <div class="mt-3 pr-4">
                             <div class="row form-group">
@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="col-md">
                                     <select class="form-control" name="userRequest.isActive" id="status">
-                                        <option value="-1" selected>Select status</option>
+                                        <option value="" selected>Select status</option>
                                         <s:iterator begin="0" end="statusList.length - 1" var="index">
                                             <option value="${index}">
                                                 ${statusList[index]}

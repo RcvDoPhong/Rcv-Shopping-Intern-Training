@@ -14,7 +14,11 @@ public interface IProductService {
 
     List<Product> findAll(Product productForm);
 
-    void deleteProduct(long productId);
+    Product getProduct(String productId);
+
+    void deleteProduct(String productId);
+
+    ResponseEntity<String> handleCreateUpdate(Product productForm, String message, String typeProcess);
 
     // ResponseEntity<String> deleteUser(long productId);
 }

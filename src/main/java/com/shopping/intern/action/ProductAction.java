@@ -15,21 +15,27 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.tiles.annotation.TilesDefinition;
 import org.apache.struts2.tiles.annotation.TilesDefinitions;
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.shopping.intern.model.Product;
+import com.shopping.intern.model.User;
 import com.shopping.intern.service.Product.IProductService;
 
 @Namespace("/user/products")
 @Results({
-        @Result(name = "index", type = "tiles", location = "products"),
+        @Result(name = "input", type = "tiles", location = "products"),
+        @Result(name = "redirectProductList", type = "redirectAction", params = {"actionName", ""}),
         @Result(name = "create", type = "tiles", location = "createProduct"),
+        @Result(name = "update", type = "tiles", location = "updateProduct"),
         @Result(type = "json")
 })
 @TilesDefinitions({
         @TilesDefinition(name = "products", extend = "masterLayout"),
-        @TilesDefinition(name = "createProduct", extend = "masterLayout")
+        @TilesDefinition(name = "createProduct", extend = "masterLayout"),
+        @TilesDefinition(name = "updateProduct", extend = "masterLayout")
 })
 public class ProductAction extends ActionSupport {
 
@@ -47,7 +53,7 @@ public class ProductAction extends ActionSupport {
 
     private int perPage = 1;
 
-    private long productId;
+    private String productId;
 
     private String productName;
 
@@ -57,19 +63,23 @@ public class ProductAction extends ActionSupport {
 
     private String toPrice;
 
-    private byte isSales = -1;
+    private String isSales;
 
     private String changePageAction = "/user/products/";
 
     private String[] statusList = { "Stop production", "On Sales", "Out of stock" };
 
-    private ResponseEntity<String> jsonResponseEntity;
+    private ResponseEntity<String> jsonResponse;
 
     private List<Product> productListPaginate;
 
     private final IProductService productService;
 
-    private File file;
+    private File uploadImage;
+
+    private String uploadImageContentType;
+
+    private File uploadImageFileName;
 
     public ProductAction(IProductService productService) {
         this.productService = productService;
@@ -171,36 +181,52 @@ public class ProductAction extends ActionSupport {
         this.toPrice = toPrice;
     }
 
-    public byte getIsSales() {
+    public String getIsSales() {
         return isSales;
     }
 
-    public void setIsSales(byte isSales) {
+    public void setIsSales(String isSales) {
         this.isSales = isSales;
     }
 
-    public ResponseEntity<String> getJsonResponseEntity() {
-        return jsonResponseEntity;
+    public ResponseEntity<String> getJsonResponse() {
+        return jsonResponse;
     }
 
-    public void setJsonResponseEntity(ResponseEntity<String> jsonResponseEntity) {
-        this.jsonResponseEntity = jsonResponseEntity;
+    public void setJsonResponse(ResponseEntity<String> jsonResponse) {
+        this.jsonResponse = jsonResponse;
     }
 
-    public long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
-    public File getFile() {
-        return file;
+    public File getUploadImage() {
+        return uploadImage;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setUploadImage(File uploadImage) {
+        this.uploadImage = uploadImage;
+    }
+
+    public String getUploadImageContentType() {
+        return uploadImageContentType;
+    }
+
+    public void setUploadImageContentType(String uploadImageContentType) {
+        this.uploadImageContentType = uploadImageContentType;
+    }
+
+    public File getUploadImageFileName() {
+        return uploadImageFileName;
+    }
+
+    public void setUploadImageFileName(File uploadImageFileName) {
+        this.uploadImageFileName = uploadImageFileName;
     }
 
     public void handleSearchUrl() {
@@ -221,16 +247,27 @@ public class ProductAction extends ActionSupport {
             searchURL.append("toPrice=" + toPrice + "&");
         }
 
-        if (isSales > -1) {
-            tempProduct.setIsSales(isSales);
+        if (isSales != null) {
+            tempProduct.setIsSales(isSales.equals("") ? null : isSales);
             searchURL.append("isSales=" + isSales + "&");
         }
 
         setProductForm(tempProduct);
     }
 
-    @Action("")
-    public String index() {
+    public void setupMessageResponse(String message, String productId) {
+        JSONObject response = new JSONObject();
+        Product productInfo = this.productService.getProduct(productId);
+        response.put("message", String.format(message, productInfo.getProductName()));
+        setJsonResponse(new ResponseEntity<>(response.toString(), HttpStatus.OK));
+    }
+
+    @Action(value = "", interceptorRefs = {
+        @InterceptorRef(value = "store", params = {"operationMode", "RETRIEVE"}),
+        @InterceptorRef(value = "defaultStack")
+    })
+    @Override
+    public String execute() {
         handleSearchUrl();
 
         String pageGet = request.getParameter("page");
@@ -242,31 +279,53 @@ public class ProductAction extends ActionSupport {
         int currentPage = (page - 1) * perPage;
         setProductListPaginate(this.productService.paginate(currentPage, perPage, productForm));
 
-        return "index";
+        return "input";
     }
 
+    /* Create product view */
     @Action("create")
     public String create() {
         return "create";
     }
 
-    @Override
-    @Action(value = "store", interceptorRefs = {
-        @InterceptorRef(value = "basicStack"),
-        @InterceptorRef(value = "fileUpload", params = {"allowedTypes", "image/jpeg,image/gif,image/png"})
-    })
-    public String execute() {
-        // File localFile = new File("D:\\", "test.png");
-        // FileUtils.copyFile(productForm.getProductImage(), localFile);
-        System.out.println("Upload file " + file);
+    /* Store record in Database action */
+    @Action("store")
+    public String store() {
+        System.out.println("test " + productForm.getProductImage());
         System.out.println(productForm.getProductName());
-        System.out.println(productForm.getDescription());
+        String message = "Create new product successfully";
+        setJsonResponse(this.productService.handleCreateUpdate(productForm, message, "create"));
+        return SUCCESS;
+    }
 
+    /* Edit existed Product value */
+    @Action(value = "edit", interceptorRefs = {
+        @InterceptorRef(value = "store", params = {"operationMode", "STORE"}),
+        @InterceptorRef(value = "defaultStack")
+    })
+    public String edit() {
+        setProductId(request.getParameter("productId"));
+        // If Product ID not found => redirect
+        if (productId == null) {
+            addActionError("Product ID is invalid");
+            return "redirectProductList";
+        }
+        setProductForm(this.productService.getProduct(productId));
+
+        return "update";
+    }
+
+    @Action("update")
+    public String update() {
+        System.out.println(productForm.getProductPrice());
+        String message = "Update product's Info successfully";
+        setJsonResponse(this.productService.handleCreateUpdate(productForm, message, "update"));
         return SUCCESS;
     }
 
     @Action("delete")
     public String delete() {
+        setupMessageResponse("Delete %s successfully", productId);
         this.productService.deleteProduct(productId);
         return SUCCESS;
     }

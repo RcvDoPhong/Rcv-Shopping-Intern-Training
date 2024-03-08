@@ -1,13 +1,10 @@
 package com.shopping.intern.model;
 
 import java.io.File;
-import java.util.Date;
 
 public class Product {
 
-    private long productId;
-
-    private String productUid;
+    private String productId;
 
     private String productName;
 
@@ -19,28 +16,20 @@ public class Product {
 
     private String productToPrice;
 
-    private byte isSales = -1;
+    private String isSales;
 
     private String description;
 
-    private Date createdAt;
+    private String createdAt;
 
-    private Date updatedAt;
+    private String updatedAt;
 
-    public long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public String getProductUid() {
-        return productUid;
-    }
-
-    public void setProductUid(String productUid) {
-        this.productUid = productUid;
     }
 
     public String getProductName() {
@@ -67,11 +56,11 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public byte getIsSales() {
+    public String getIsSales() {
         return isSales;
     }
 
-    public void setIsSales(byte isSales) {
+    public void setIsSales(String isSales) {
         this.isSales = isSales;
     }
 
@@ -83,19 +72,19 @@ public class Product {
         this.description = description;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -121,5 +110,13 @@ public class Product {
         }
 
         return description;
+    }
+
+    public int getProductIndex() {
+        try {
+            return Integer.parseInt(productId.substring(1));
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

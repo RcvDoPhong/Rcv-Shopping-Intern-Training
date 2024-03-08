@@ -1,6 +1,9 @@
 package com.shopping.intern.service.User;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +28,7 @@ public class UserService implements IUserService {
 
     private byte deleteState = 1;
 
-    private byte disabledState = 0;
+    private String disabledState = "0";
 
     private String defaultPwd = "password";
 
@@ -49,11 +52,11 @@ public class UserService implements IUserService {
         this.deleteState = deleteState;
     }
 
-    public byte getDisabledState() {
+    public String getDisabledState() {
         return disabledState;
     }
 
-    public void setDisabledState(byte disabledState) {
+    public void setDisabledState(String disabledState) {
         this.disabledState = disabledState;
     }
 
@@ -67,6 +70,14 @@ public class UserService implements IUserService {
 
     public User get(long userId) {
         return this.userRepo.findById(userId);
+    }
+
+    public String getCurrentTimestamp() {
+        Date date = new Date();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        return timeFormat.format(timestamp);
     }
 
     public ResponseEntity<String> getUser(long userId) {
@@ -96,7 +107,7 @@ public class UserService implements IUserService {
     public boolean checkLogin(UserLoginRequest userLoginRequest) {
         User user = this.userRepo.findByEmail(userLoginRequest.getEmail());
         if (user != null) {
-            if (user.getIsActive() == disabledState) {
+            if (user.getIsActive().equals(disabledState)) {
                 return false;
             }
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
@@ -122,11 +133,20 @@ public class UserService implements IUserService {
     public void handleStoreUser(User userRequest) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
         String passwordEncode = encoder.encode(defaultPwd);
+
+        String currentTime = getCurrentTimestamp();
+
+        userRequest.setCreatedAt(currentTime);
+        userRequest.setUpdatedAt(currentTime);
         userRequest.setPassword(passwordEncode);
         this.userRepo.insert(userRequest);
     }
 
     public void handleUpdateUser(User userRequest) {
+
+        String currentTime = getCurrentTimestamp();
+
+        userRequest.setUpdatedAt(currentTime);
         this.userRepo.update(userRequest);
     }
 
@@ -134,20 +154,21 @@ public class UserService implements IUserService {
         JSONObject response = new JSONObject();
         UserCreateUpdateRequest validateMap = new UserCreateUpdateRequest();
         CustomValidation validate = new CustomValidation();
+        validate.setUserRepo(userRepo);
 
         boolean validateEmailFail = validate.validateSingleField(validateMap.getValidateMap(),
                 userRequest.getEmail(), "email",
-                response, userRequest.getUserId());
+                response, String.valueOf(userRequest.getUserId()));
 
         boolean validateNameFail = validate.validateSingleField(validateMap.getValidateMap(),
                 userRequest.getUserName(), "name",
-                response, userRequest.getUserId());
+                response, String.valueOf(userRequest.getUserId()));
 
         boolean validateGroupFail = validate.validateSingleField(validateMap.getValidateMap(),
-                String.valueOf(userRequest.getGroupRole()), "group", response, userRequest.getUserId());
+                String.valueOf(userRequest.getGroupRole()), "group", response, String.valueOf(userRequest.getUserId()));
 
         boolean validateStatusFail = validate.validateSingleField(validateMap.getValidateMap(),
-                String.valueOf(userRequest.getIsActive()), "status", response, userRequest.getUserId());
+                String.valueOf(userRequest.getIsActive()), "status", response, String.valueOf(userRequest.getUserId()));
 
         if (validateEmailFail || validateNameFail || validateGroupFail || validateStatusFail) {
             JSONObject error = new JSONObject();

@@ -48,10 +48,10 @@
                         </li>
                     </s:iterator>
                     <li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>
-                    <a class="page-link" href="#">
+                    <a class="page-link" href="${changePageAction}?${searchURL}page=${totalPage - 1}">
                         ${totalPage - 1}
                     </a>
-                    <a class="page-link" href="#">
+                    <a class="page-link" href="${changePageAction}?${searchURL}page=${totalPage}">
                         ${totalPage}
                     </a>
                 </s:if>
