@@ -10,9 +10,9 @@ import org.apache.struts2.tiles.annotation.TilesDefinition;
 @Namespace("/user")
 @Result(name = "home", type = "tiles", location = "dashboard")
 @TilesDefinition(name = "dashboard", extend = "masterLayout")
-// @InterceptorRefs({
-//         @InterceptorRef(value = "authSecureStack")
-// })
+@InterceptorRefs({
+        @InterceptorRef(value = "authSecureStack")
+})
 public class DashboardAction {
 
     private String requestUrl;

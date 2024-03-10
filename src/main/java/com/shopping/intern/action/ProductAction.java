@@ -1,11 +1,9 @@
 package com.shopping.intern.action;
 
-import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.InterceptorRef;
@@ -21,13 +19,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.shopping.intern.model.Product;
-import com.shopping.intern.model.User;
-import com.shopping.intern.service.Product.IProductService;
+import com.shopping.intern.service.product.IProductService;
 
 @Namespace("/user/products")
 @Results({
         @Result(name = "input", type = "tiles", location = "products"),
-        @Result(name = "redirectProductList", type = "redirectAction", params = {"actionName", ""}),
+        @Result(name = "redirectProductList", type = "redirectAction", params = { "actionName", "" }),
         @Result(name = "create", type = "tiles", location = "createProduct"),
         @Result(name = "update", type = "tiles", location = "updateProduct"),
         @Result(type = "json")
@@ -36,6 +33,9 @@ import com.shopping.intern.service.Product.IProductService;
         @TilesDefinition(name = "products", extend = "masterLayout"),
         @TilesDefinition(name = "createProduct", extend = "masterLayout"),
         @TilesDefinition(name = "updateProduct", extend = "masterLayout")
+})
+@InterceptorRefs({
+    @InterceptorRef(value = "authSecureStack")
 })
 public class ProductAction extends ActionSupport {
 
@@ -51,7 +51,7 @@ public class ProductAction extends ActionSupport {
 
     private int totalPage;
 
-    private int perPage = 1;
+    private int perPage = 10;
 
     private String productId;
 
@@ -74,12 +74,6 @@ public class ProductAction extends ActionSupport {
     private List<Product> productListPaginate;
 
     private final IProductService productService;
-
-    private File uploadImage;
-
-    private String uploadImageContentType;
-
-    private File uploadImageFileName;
 
     public ProductAction(IProductService productService) {
         this.productService = productService;
@@ -205,30 +199,6 @@ public class ProductAction extends ActionSupport {
         this.productId = productId;
     }
 
-    public File getUploadImage() {
-        return uploadImage;
-    }
-
-    public void setUploadImage(File uploadImage) {
-        this.uploadImage = uploadImage;
-    }
-
-    public String getUploadImageContentType() {
-        return uploadImageContentType;
-    }
-
-    public void setUploadImageContentType(String uploadImageContentType) {
-        this.uploadImageContentType = uploadImageContentType;
-    }
-
-    public File getUploadImageFileName() {
-        return uploadImageFileName;
-    }
-
-    public void setUploadImageFileName(File uploadImageFileName) {
-        this.uploadImageFileName = uploadImageFileName;
-    }
-
     public void handleSearchUrl() {
         Product tempProduct = new Product();
 
@@ -263,8 +233,8 @@ public class ProductAction extends ActionSupport {
     }
 
     @Action(value = "", interceptorRefs = {
-        @InterceptorRef(value = "store", params = {"operationMode", "RETRIEVE"}),
-        @InterceptorRef(value = "defaultStack")
+            @InterceptorRef(value = "store", params = { "operationMode", "RETRIEVE" }),
+            @InterceptorRef(value = "defaultStack")
     })
     @Override
     public String execute() {
@@ -282,6 +252,14 @@ public class ProductAction extends ActionSupport {
         return "input";
     }
 
+    @Action("getProduct")
+    public String productAjax() {
+        setProductId(request.getParameter("productId"));
+        setJsonResponse(this.productService.getProductAjax(productId));
+
+        return SUCCESS;
+    }
+
     /* Create product view */
     @Action("create")
     public String create() {
@@ -289,10 +267,10 @@ public class ProductAction extends ActionSupport {
     }
 
     /* Store record in Database action */
-    @Action("store")
+    @Action(value = "store", interceptorRefs = {
+        @InterceptorRef(value = "defaultStack")
+    })
     public String store() {
-        System.out.println("test " + productForm.getProductImage());
-        System.out.println(productForm.getProductName());
         String message = "Create new product successfully";
         setJsonResponse(this.productService.handleCreateUpdate(productForm, message, "create"));
         return SUCCESS;
@@ -300,8 +278,8 @@ public class ProductAction extends ActionSupport {
 
     /* Edit existed Product value */
     @Action(value = "edit", interceptorRefs = {
-        @InterceptorRef(value = "store", params = {"operationMode", "STORE"}),
-        @InterceptorRef(value = "defaultStack")
+            @InterceptorRef(value = "store", params = { "operationMode", "STORE" }),
+            @InterceptorRef(value = "defaultStack")
     })
     public String edit() {
         setProductId(request.getParameter("productId"));
@@ -315,9 +293,10 @@ public class ProductAction extends ActionSupport {
         return "update";
     }
 
-    @Action("update")
+    @Action(value = "update", interceptorRefs = {
+        @InterceptorRef(value = "defaultStack")
+    })
     public String update() {
-        System.out.println(productForm.getProductPrice());
         String message = "Update product's Info successfully";
         setJsonResponse(this.productService.handleCreateUpdate(productForm, message, "update"));
         return SUCCESS;

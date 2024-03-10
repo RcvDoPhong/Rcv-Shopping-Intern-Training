@@ -14,7 +14,7 @@ public interface UserMapper {
 
     User findById(long userId);
 
-    User findByEmail(String email, long id);
+    User findByEmail(String email, long userId);
 
     boolean existByEmail(String email);
 
@@ -26,5 +26,5 @@ public interface UserMapper {
 
     void deleteById(long userId);
 
-    User findByName(String name, long id);
+    User findByName(String name, long userId);
 }

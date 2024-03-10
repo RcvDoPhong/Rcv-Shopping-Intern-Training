@@ -35,27 +35,29 @@
         </div>
         <div class="row col-6 mt-5">
             <div class="d-flex" style="height:300px">
-                <img name="preview" class="rounded float-right img-thumbnail img-fluid"
-                    src="/user/images/product_placeholder.png" alt="">
+                <img id="preview" class="rounded float-right img-thumbnail img-fluid"
+                    src="/user/images/products/product_placeholder.png" alt="">
             </div>
             <div class="input-group">
                 <div class="input-group-append">
-                    <button class="btn btn-danger rounded" type="button" id="clearDirectory">
+                    <button class="btn btn-danger rounded" type="button" id="clearDirectory"
+                        onclick="imageValidate.clearImage('uploadImage')">
                         Remove file
                     </button>
                 </div>
-                <input name="productForm.productImage" class="form-control" type="file"
-                    accept="image/png, image/jpg, image/jpeg">
+                <input name="productForm.uploadImage" class="form-control" type="file"
+                    accept="image/png, image/jpg, image/jpeg" id="uploadImage"
+                    onchange="imageValidate.displayImage(this)">
             </div>
-            <span class="text-danger" style="font-size:80% !important"></span>
+            <span class="validation text-danger" style="font-size:80% !important" id="uploadImage"></span>
         </div>
     </div>
     <div class="row justify-content-end">
         <div class="col-auto">
-            <button id="clear" type="button" class="btn btn-danger">
+            <a href="/user/products/" id="clear" type="button" class="btn btn-danger">
                 <i class="fas fa-window-close mr-2"></i>
                 Cancel
-            </button>
+            </a>
         </div>
         <div class="col-auto">
             <button type="button" class="btn btn-primary" onclick="products.handleCreateUpdateProduct(this, event)">
@@ -66,3 +68,4 @@
     </div>
 </form>
 <script src="/user/style/js/products.js"></script>
+<script src="/user/style/js/images.js"></script>

@@ -8,7 +8,13 @@ public class Product {
 
     private String productName;
 
-    private File productImage;
+    private String productImage = "product_placeholder.png";
+
+    private File uploadImage;
+
+    private String uploadImageContentType;
+
+    private String uploadImageFileName;
 
     private double productPrice;
 
@@ -40,11 +46,35 @@ public class Product {
         this.productName = productName;
     }
 
-    public File getProductImage() {
+    public File getUploadImage() {
+        return uploadImage;
+    }
+
+    public void setUploadImage(File uploadImage) {
+        this.uploadImage = uploadImage;
+    }
+
+    public String getUploadImageContentType() {
+        return uploadImageContentType;
+    }
+
+    public void setUploadImageContentType(String uploadImageContentType) {
+        this.uploadImageContentType = uploadImageContentType;
+    }
+
+    public String getUploadImageFileName() {
+        return uploadImageFileName;
+    }
+
+    public void setUploadImageFileName(String uploadImageFileName) {
+        this.uploadImageFileName = uploadImageFileName;
+    }
+
+    public String getProductImage() {
         return productImage;
     }
 
-    public void setProductImage(File productImage) {
+    public void setProductImage(String productImage) {
         this.productImage = productImage;
     }
 

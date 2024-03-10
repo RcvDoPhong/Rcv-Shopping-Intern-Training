@@ -1,4 +1,4 @@
-package com.shopping.intern.repository.Product;
+package com.shopping.intern.repository.product;
 
 import java.util.List;
 

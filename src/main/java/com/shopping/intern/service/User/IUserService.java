@@ -1,6 +1,5 @@
-package com.shopping.intern.service.User;
+package com.shopping.intern.service.user;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -16,15 +15,15 @@ public interface IUserService {
 
     User get(long userId);
 
+    void handleFirstRunProject();
+
     ResponseEntity<String> getUser(long userId);
 
     void deleteById(long userId);
 
     void lockById(long userId);
 
-    boolean checkLogin(UserLoginRequest userLoginRequest);
-
-    void storeTempValueLoginFail(UserLoginRequest userLoginRequest);
+    ResponseEntity<String> validateLogin(UserLoginRequest userLoginRequest);
 
     ResponseEntity<String> validate(User userRequest, String message, String createType);
 }

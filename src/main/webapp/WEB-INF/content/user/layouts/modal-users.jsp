@@ -28,7 +28,7 @@
                                     <label class="mt-2">Email</label>
                                 </div>
                                 <div class="col-10">
-                                    <input name="userRequest.email" id="email" type="text" class="form-control" value="${email}"
+                                    <input name="userRequest.email" id="email" type="text" class="form-control" value=""
                                         placeholder="Type email">
                                     <span name="email" id="email" class="error validation invalid-feedback d-flex"></span>
                                 </div>

@@ -42,16 +42,16 @@
         SELECT <include refid="Base_Column_List" />
         FROM mst_users
         WHERE email=#{email}
-        <if test="id != 0">
-            AND user_id != #{id}
+        <if test="userId != 0">
+            AND user_id != #{userId}
         </if>
     </select>
     <select id="findByName" resultType="User">
         SELECT <include refid="Base_Column_List" />
         FROM mst_users
         WHERE user_name=#{name}
-        <if test="id != 0">
-            AND user_id != #{id}
+        <if test="userId != 0">
+            AND user_id != #{userId}
         </if>
     </select>
     <update id="update">
@@ -64,6 +64,6 @@
         UPDATE mst_users SET is_active=0 WHERE user_id = #{userId}
     </update>
     <update id="deleteById">
-        UPDATE mst_users SET is_delete=1 WHERE user_id = #{user_id}
+        UPDATE mst_users SET is_delete=1 WHERE user_id = #{userId}
     </update>
 </mapper>

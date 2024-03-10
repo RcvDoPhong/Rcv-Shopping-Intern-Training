@@ -1,11 +1,25 @@
 .pr-lg-10 {
-    padding-right: 6rem!important;
+    padding-right: 6rem !important;
 }
 
 .pr-lg-15 {
-    padding-right: 9rem!important;
+    padding-right: 9rem !important;
 }
 
 .checked {
     color: orange;
+}
+
+.no-border {
+    border: 0;
+    box-shadow: none;
+    /* You may want to include this as bootstrap applies these styles too */
+}
+
+input[type="text"]:disabled {
+    background: white;
+}
+
+.input-row-bg {
+    background: rgb(80, 156, 254) !important;
 }

@@ -2,9 +2,6 @@ package com.shopping.intern.model;
 
 public class User {
 
-    // @Autowired
-    // private UserMapper userMapper;
-
     private int userId;
 
     private String userName;
@@ -30,9 +27,6 @@ public class User {
     private String createdAt = null;
 
     private String updatedAt = null;
-
-    public User() {
-    }
 
     // User's ID
     public int getUserId() {
@@ -148,16 +142,4 @@ public class User {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public boolean isActiveStatus() {
-        return getIsActive().equals(1);
-    }
-
-    // public List<User> selectAll() {
-    // return this.userMapper.findAllUser();
-    // }
-
-    // public User findUserById(int userId) {
-    // return this.userMapper.findUserById(userId);
-    // }
 }

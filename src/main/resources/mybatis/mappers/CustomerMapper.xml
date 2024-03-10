@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopping.intern.mapper.CustomerMapper">
+    <sql id="Base_Column_List">
+        customer_id, customer_name, email, tel_num,
+        address, is_active, created_at, updated_at
+    </sql>
+    <select id="findAll" resultType="Customer">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_customers
+        WHERE customer_id IS NOT NULL
+        <if test="customerForm.customerName != null">
+            <bind name="searchCustomerName" value="'%' + customerForm.customerName + '%'" />
+            AND customer_name LIKE #{searchCustomerName}
+        </if>
+        <if test="customerForm.email != null">
+            <bind name="searchEmail" value="'%' + customerForm.email + '%'" />
+            AND email LIKE #{searchEmail}
+        </if>
+        <if test="customerForm.address != null">
+            <bind name="searchAddress" value="'%' + customerForm.address + '%'" />
+            AND address LIKE #{searchAddress}
+        </if>
+        <if test="customerForm.isActive != null">
+            AND is_active = #{customerForm.isActive}
+        </if>
+        ORDER BY updated_at DESC
+        <if test="paginate == true">
+            LIMIT #{currentPage}, ${perPage}
+        </if>
+    </select>
+    <insert id="insert">
+        INSERT INTO
+        mst_customers(customer_name, email, tel_num, address, is_active, created_at, updated_at)
+        VALUES (#{customerName}, #{email}, #{telNum}, #{address}, #{isActive}, #{createdAt}, #{updatedAt})
+    </insert>
+    <select id="findById" resultType="Customer">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_customers WHERE customer_id = #{customerId}
+    </select>
+    <select id="findByEmail" resultType="Customer">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_customers
+        WHERE email=#{email}
+        <if test="customerId != 0">
+            AND customer_id != #{customerId}
+        </if>
+    </select>
+    <select id="findByName" resultType="Customer">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_customers
+        WHERE customer_name=#{customerNname}
+        <if test="customerId != 0">
+            AND customer_id != #{customerId}
+        </if>
+    </select>
+    <update id="update">
+        UPDATE mst_customers SET
+        customer_name = #{customerName}, email = #{email}, address = #{address},
+        tel_num = #{telNum}, is_active = #{isActive}, updated_at = #{updatedAt}
+        WHERE customer_id = #{customerId}
+    </update>
+    <update id="lockById">
+        UPDATE mst_customers SET is_active=0 WHERE customer_id = #{customerId}
+    </update>
+</mapper>
