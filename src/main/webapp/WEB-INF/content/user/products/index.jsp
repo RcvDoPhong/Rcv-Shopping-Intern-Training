@@ -9,8 +9,8 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="name">Product name</label>
-                    <input name="productName" type="text" class="form-control d-flex"
-                        value="${param.productName}" placeholder="Type name">
+                    <input name="productName" type="text" class="form-control d-flex" value="${param.productName}"
+                        placeholder="Type name">
                 </div>
             </div>
             <div class="col-auto">
@@ -29,8 +29,8 @@
             <div class="col-auto">
                 <div class="form-group">
                     <label class="mt-2 d-flex" for="email">From Price</label>
-                    <input name="fromPrice" type="text" class="form-control d-flex"
-                        value="${param.fromPrice}" placeholder="Type from price range">
+                    <input name="fromPrice" type="text" class="form-control d-flex" value="${param.fromPrice}"
+                        placeholder="Type from price range">
                 </div>
             </div>
             <div class="col-auto">
@@ -74,7 +74,7 @@
                     </s:if>
                 </div>
                 <div class="col-4 d-flex justify-content-end">
-                    Display ${(currentPage * amountForPage) - amountForPage + 1} ~ ${currentPage * amountForPage} in
+                    Display ${(page * perPage) - perPage + 1} ~ ${page * perPage} in
                     total of ${productListPaginate.size()} users
                 </div>
             </div>
@@ -95,10 +95,13 @@
                 <tbody id="user-table">
                     <s:if test="productListPaginate.size() > 0">
                         <s:iterator value="productListPaginate" var="product">
-
                             <tr>
                                 <td>${product.getProductIndex()}</td>
-                                <td>${product.productId}</td>
+                                <td data-toggle="tooltip" id="productId" data-html="true"
+                                    title="<img class='img-thumbnail' src='/user/images/products/${product.productImage}'/>"
+                                    onmouseover="tooltip.showContent(this)">
+                                    ${product.productId}
+                                </td>
                                 <td>
                                     <a href="/user/products/edit?productId=${product.productId}"
                                         class="text-decoration-none">

@@ -1,4 +1,4 @@
-package com.shopping.intern.service.Product;
+package com.shopping.intern.service.product;
 
 import java.util.List;
 
@@ -15,6 +15,8 @@ public interface IProductService {
     List<Product> findAll(Product productForm);
 
     Product getProduct(String productId);
+
+    ResponseEntity<String> getProductAjax(String productId);
 
     void deleteProduct(String productId);
 

@@ -1,9 +1,10 @@
-package com.shopping.intern.service.Product;
+package com.shopping.intern.service.product;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -12,13 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.shopping.intern.component.CustomValidation;
 import com.shopping.intern.model.Product;
-import com.shopping.intern.repository.Product.IProductRepository;
+import com.shopping.intern.repository.product.IProductRepository;
 import com.shopping.intern.request.ProductCreateUpdateRequest;
 
 @Service
 public class ProductService implements IProductService {
 
     private final IProductRepository productRepo;
+
+    private String defaultImageFileName = "product_placeholder.png";
+
+    private Random random = new Random();
 
     public ProductService(IProductRepository productRepo) {
         this.productRepo = productRepo;
@@ -48,22 +53,54 @@ public class ProductService implements IProductService {
         return timeFormat.format(timestamp);
     }
 
-    public void handleStoreUser(Product productForm) {
+    public ResponseEntity<String> getProductAjax(String productId) {
+        Product product = this.getProduct(productId);
+
+        JSONObject response = new JSONObject();
+        response.put("productId", product.getProductId());
+        response.put("productName", product.getProductName());
+        response.put("productImage", product.getProductImage());
+        response.put("productPrice", product.getProductPrice());
+
+        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+    }
+
+    public void handleStoreUser(Product productForm, CustomValidation validate) {
         String currentTime = getCurrentTimestamp();
 
+        String imageName = productForm.getProductImage();
+        if (productForm.getUploadImage() != null) {
+            imageName = formatProductImageName(productForm);
+            handleStoreImage(productForm, imageName, validate);
+        }
+
+        productForm.setProductImage(imageName);
         productForm.setCreatedAt(currentTime);
         productForm.setUpdatedAt(currentTime);
         this.productRepo.insert(productForm);
     }
 
-    public void handleUpdateUser(Product productForm) {
+    public void handleUpdateUser(Product productForm, CustomValidation validate) {
         String currentTime = getCurrentTimestamp();
+        Product product = this.getProduct(productForm.getProductId());
+        String imageName = product.getProductImage();
+
+        if (productForm.getUploadImage() != null) {
+            if (product.getProductImage().equals(defaultImageFileName)) {
+                imageName = formatProductImageName(productForm);
+            }
+            handleStoreImage(productForm, imageName, validate);
+            productForm.setProductImage(imageName);
+        } else {
+            productForm.setProductImage(product.getProductImage());
+        }
         productForm.setUpdatedAt(currentTime);
         this.productRepo.update(productForm);
     }
 
     public ResponseEntity<String> handleCreateUpdate(Product productForm, String message, String typeProcess) {
         JSONObject response = new JSONObject();
+        JSONObject error = new JSONObject();
 
         CustomValidation validate = new CustomValidation();
         ProductCreateUpdateRequest validateMap = new ProductCreateUpdateRequest();
@@ -83,22 +120,49 @@ public class ProductService implements IProductService {
                 String.valueOf(productForm.getIsSales()), "status", response,
                 productForm.getProductId());
 
-        if (validateProductNameFail || validateProductPriceFail || validateDescriptionFail || validateIsSalesFail) {
-            JSONObject error = new JSONObject();
+        boolean validateImageFail = validate.validateImage(productForm.getUploadImage(),
+                productForm.getUploadImageFileName(), response);
+
+        if (validateProductNameFail || validateProductPriceFail || validateDescriptionFail || validateIsSalesFail
+                || validateImageFail) {
             error.put("error", response);
-            System.out.println(error.toString());
             return new ResponseEntity<>(error.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         if (typeProcess.equals("create")) {
-            handleStoreUser(productForm);
+            handleStoreUser(productForm, validate);
         } else {
-            handleUpdateUser(productForm);
+            handleUpdateUser(productForm, validate);
         }
 
         response.put("message", message);
         response.put("url", "/user/products/");
 
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+    }
+
+    public void handleStoreImage(Product productForm, String fileName, CustomValidation validate) {
+        validate.handleStoreImage(productForm.getUploadImage(), fileName, "\\products\\");
+    }
+
+    public String formatProductImageName(Product product) {
+        Date date = new Date();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        String newProductName = product.getProductName().replace(" ", "_");
+
+        int randomNumber = getRandomNumberUsingNextInt(100000, 999999);
+        String timeSave = timeFormat.format(timestamp);
+
+        String[] imgFileNameSplitString = product.getUploadImageFileName().split("\\.");
+        int stringLength = imgFileNameSplitString.length;
+        String extension = imgFileNameSplitString[stringLength - 1];
+
+        return String.format("%s_%s_%s.%s", newProductName, randomNumber, timeSave, extension);
+    }
+
+    public int getRandomNumberUsingNextInt(int min, int max) {
+        return random.nextInt(max - min) + min;
     }
 }

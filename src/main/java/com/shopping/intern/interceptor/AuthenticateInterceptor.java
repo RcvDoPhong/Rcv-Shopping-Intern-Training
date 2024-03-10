@@ -1,18 +1,14 @@
 package com.shopping.intern.interceptor;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsStatics;
-import org.springframework.util.StringUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.shopping.intern.action.LoginAction;
 
@@ -22,7 +18,6 @@ public class AuthenticateInterceptor implements Interceptor {
     private static final String EMAIL_SESSION = "userSession";
 
     public void init() {
-        log.info("Intializing LoginInterceptor");
     }
 
     public void destroy() {

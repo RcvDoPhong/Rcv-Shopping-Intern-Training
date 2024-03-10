@@ -22,37 +22,26 @@
                             <div class="card-body">
                                 <p class="login-box-msg">Sign in to start you session</p>
 
-                                <form method="post" action="/user/loginAction" name="loginForm">
+                                <form method="post" action="/user/loginAction" id="loginForm">
                                     <div class="input-group mb-3">
-                                        <input type="email" value="${email}"
-                                            class="form-control" name="user.email"
+                                        <input id="email" type="email" value="" class="form-control" name="user.email"
                                             placeholder="Email">
-                                        <%
-                                            if (session.getAttribute("email") != null) {
-                                                session.removeAttribute("email");
-                                            }
-                                        %>
-                                        <div class="input-group-append">
-                                            <div class="input-group-text">
-                                                <span class="fas fa-envelope"></span>
+                                            <div class="input-group-append">
+                                                <div class="input-group-text">
+                                                    <span class="fas fa-envelope"></span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <span class="error invalid-feedback d-flex">
-                                            <s:fielderror fieldName="email-error" />
-                                        </span>
+                                            <span class="error validation invalid-feedback d-flex" id="email"></span>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="password"
-                                            class="form-control" name="user.password"
+                                        <input id="password" type="password" class="form-control" name="user.password"
                                             placeholder="Password">
                                         <div class="input-group-append">
                                             <div class="input-group-text">
                                                 <span class="fas fa-lock"></span>
                                             </div>
                                         </div>
-                                        <span class="error invalid-feedback d-flex">
-                                            <s:fielderror fieldName="password-error" />
-                                        </span>
+                                        <span class="error validation invalid-feedback d-flex" id="password"></span>
                                     </div>
                                     <!-- <div>
                                         <div class="col-8">
@@ -65,19 +54,16 @@
                                         </div>
                                     </div> -->
                                     <div class="text-center mt-2 mb-3">
-                                        <button type="submit" class="btn btn-block btn-primary" id="loginBtn">
+                                        <button type="button" class="btn btn-block btn-primary" id="loginBtn"
+                                        onclick="login.loginCheck(this)">
                                             Login
                                         </button>
                                     </div>
                                 </form>
-                                <s:if test="hasActionErrors()">
-                                    <div class="pt-2 pb-1 bg-danger text-white rounded">
-                                        <s:actionerror />
-                                    </div>
-                                </s:if>
-                                <p class="mb-1">
-                                    <a href="forgot-password.html">Recovery password</a>
-                                </p>
+                                <div class="p-3 bg-danger rounded d-none" id="status">
+                                    <span class="validation text-white"
+                                        id="status"></span>
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -86,3 +72,7 @@
                 </div>
             </div>
         </body>
+        <script src="/user/style/plugins/jquery/jquery.min.js"></script>
+        <script src="/user/style/js/login.js"></script>
+        <script src="/user/style/js/app.js"></script>
+        <script src="/user/style/plugins/sweetalert2/sweetalert2.all.min.js"></script>

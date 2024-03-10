@@ -4,9 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.StrutsStatics;
-import org.springframework.util.StringUtils;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.shopping.intern.action.LoginAction;
@@ -17,12 +15,10 @@ public class GuestInterceptor implements Interceptor {
 
     @Override
     public void destroy() {
-        // TODO Auto-generated method stub
     }
 
     @Override
     public void init() {
-        // TODO Auto-generated method stub
     }
 
     @Override

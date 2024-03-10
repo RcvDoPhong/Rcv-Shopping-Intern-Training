@@ -71,6 +71,19 @@ END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
 
+CREATE TABLE IF NOT EXISTS `mst_customers` (
+  `customer_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `customer_name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `tel_num` VARCHAR(14) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `is_active` tinyint NOT NULL DEFAULT '1' COMMENT '0: Không hoạt động, 1: Hoạt động',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`customer_id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

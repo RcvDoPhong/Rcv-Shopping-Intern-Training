@@ -1,9 +1,9 @@
 const products = {
-    handleCreateUpdateProduct: function(targetButton, event) {
+    handleCreateUpdateProduct: function (targetButton) {
+        $(targetButton).attr("disabled", true);
         products.clearError();
 
         const url = $("#productForm").attr("action");
-        // const data = $("#productForm").serialize();
         const data = new FormData($(`form#productForm`)[0]);
 
         $.ajax({
@@ -24,23 +24,22 @@ const products = {
                         common.sweetAlertNoButton('Success!!', jsonResponse.message, 'success', jsonResponse.url);
                         break;
                 }
-                console.log(jsonResponse, statusCode)
             },
             error: function (response) {
                 console.log("error", response)
             }
+        }).always(function () {
+            $(targetButton).attr("disabled", false);
         })
     },
-    displayError: function(errors) {
+    displayError: function (errors) {
         $.each(errors, function (title, value) {
-            console.log(`#${title}`, $("form#productForm").find(`#${title}`), $(`#${title}`));
             $("form#productForm").find(`#${title}`).addClass("is-invalid");
             $(`span#${title}`).html(value);
         })
     },
     clearError: function () {
-        console.log("test")
         $("form#productForm").find(".is-invalid").removeClass("is-invalid");
         $("form#productForm").find("span.validation").empty();
-    },
+    }
 }

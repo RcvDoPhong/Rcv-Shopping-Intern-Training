@@ -1,14 +1,16 @@
 package com.shopping.intern.component;
 
+import java.io.File;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 
-import com.shopping.intern.model.User;
-import com.shopping.intern.repository.Product.IProductRepository;
-import com.shopping.intern.repository.User.IUserRepository;
+import com.shopping.intern.repository.customer.ICustomerRepository;
+import com.shopping.intern.repository.product.IProductRepository;
+import com.shopping.intern.repository.user.IUserRepository;
 
 public class CustomValidation {
 
@@ -19,6 +21,10 @@ public class CustomValidation {
     private IUserRepository userRepo;
 
     private IProductRepository productRepo;
+
+    private ICustomerRepository customerRepo;
+
+    private String imgStorePath = "\\resources\\static\\user\\images";
 
     public IUserRepository getUserRepo() {
         return userRepo;
@@ -36,7 +42,27 @@ public class CustomValidation {
         this.productRepo = productRepo;
     }
 
+    public ICustomerRepository getCustomerRepo() {
+        return customerRepo;
+    }
+
+    public void setCustomerRepo(ICustomerRepository customerRepo) {
+        this.customerRepo = customerRepo;
+    }
+
     private String emailValidateRegrex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+
+    private String phoneNumberRegrex = "(84|0[3|5|7|8|9])+([0-9]{8})\\b";
+
+    private String imageExtensions = "png|jpg|jpeg";
+
+    public String getImageExtension() {
+        return imageExtensions;
+    }
+
+    public void setImageExtension(String imageExtensions) {
+        this.imageExtensions = imageExtensions;
+    }
 
     public boolean validateSingleField(
             Map<String, String> validateMap,
@@ -66,11 +92,15 @@ public class CustomValidation {
                     String column = condition[2];
                     Object obj = null;
                     if (table.equals("users")) {
-                        obj = this.userRepo.find(String.valueOf(value), column, Integer.parseInt(id));
+                        obj = this.userRepo.find(value, column, Integer.parseInt(id));
                     }
 
                     if (table.equals("products")) {
-                        obj = this.productRepo.find(String.valueOf(value), column, id);
+                        obj = this.productRepo.find(value, column, id);
+                    }
+
+                    if (table.equals("customers")) {
+                        obj = this.customerRepo.find(value, column, Integer.parseInt(id));
                     }
 
                     if (obj != null) {
@@ -118,6 +148,14 @@ public class CustomValidation {
                     }
                     break;
 
+                case "phone":
+                    Pattern phoneValidation = Pattern.compile(phoneNumberRegrex);
+                    if (!phoneValidation.matcher(value).matches()) {
+                        validateFail = true;
+                        message.append("Phone number is invalid" + "<br>"); // need to optimize
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -154,5 +192,45 @@ public class CustomValidation {
 
         return validateFail;
     }
-}
 
+    public boolean validateImage(File image, String imageFileName, JSONObject response) {
+        StringBuilder message = new StringBuilder();
+        boolean validateFail = false;
+
+        if (image != null) {
+            if (image.exists()) {
+                String[] imageFileNameTemp = imageFileName.split("\\.");
+                int imgExtensionIndex = imageFileNameTemp.length;
+                String imageExtensionGet = imageFileNameTemp[imgExtensionIndex - 1];
+
+                if (!imageExtensions.contains(imageExtensionGet)) {
+                    message.append("Unsupported image's extension detected");
+
+                    response.put("uploadImage", message);
+                    validateFail = true;
+                }
+            } else {
+                message.append("Image was lost during validation");
+
+                response.put("uploadImage", message);
+                validateFail = true;
+            }
+        }
+
+        return validateFail;
+    }
+
+    public void handleStoreImage(File image, String imageFileName, String destination) {
+        // destination: for example: "/resources/images/"
+        String path = new FileSystemResource("src/main").getFile().getAbsolutePath();
+
+        String imagePath = path + imgStorePath + destination + imageFileName;
+        File localFile = new File(imagePath);
+
+        try {
+            FileUtils.copyFile(image, localFile);
+        } catch (Exception e) {
+            System.out.println("There is something wrong happened, " + e);
+        }
+    }
+}

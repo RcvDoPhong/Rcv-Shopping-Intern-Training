@@ -1,4 +1,4 @@
-package com.shopping.intern.repository.User;
+package com.shopping.intern.repository.user;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.shopping.intern.mapper.UserMapper;
 import com.shopping.intern.model.User;
-import com.shopping.intern.service.User.UserService;
 
 @Repository
 @MapperScan("com.shopping.intern.mapper")
@@ -27,8 +26,8 @@ public class UserRepository implements IUserRepository {
         return this.userMapper.findById(userId);
     }
 
-    public User findByEmailWithException(String email, long id) {
-        return this.userMapper.findByEmail(email, id);
+    public User findByEmailWithException(String email, long userId) {
+        return this.userMapper.findByEmail(email, userId);
     }
 
     public User findByEmail(String email) {
@@ -55,26 +54,26 @@ public class UserRepository implements IUserRepository {
         return this.userMapper.findByName(name, 0);
     }
 
-    public User findByNameWithException(String name, long id) {
-        return this.userMapper.findByName(name, id);
+    public User findByNameWithException(String name, long userId) {
+        return this.userMapper.findByName(name, userId);
     }
 
-    public User find(String value, String column, long id) {
+    public User find(String value, String column, long userId) {
         switch (column) {
             case "user_id":
                 return this.findById(Integer.parseInt(value));
 
             case "user_name":
-                if (id != 0) {
-                    return this.findByName(value);
+                if (userId != 0) {
+                    return this.findByNameWithException(value, userId);
                 }
-                return this.findByNameWithException(value, id);
+                return this.findByName(value);
 
             case "email":
-                if (id != 0) {
-                    return this.findByEmail(column);
+                if (userId != 0) {
+                    return this.findByEmailWithException(value, userId);
                 }
-                return this.findByEmailWithException(value, id);
+                return this.findByEmail(value);
 
             default:
                 return null;

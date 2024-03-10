@@ -8,10 +8,7 @@
     <constant name="struts.enable.SlashesInActionNames" value="true" />
     <!-- <constant name="struts.action.extension" value=""/> -->
     <constant name="struts.convention.default.parent.package" value="default" />
-
-    <constant name="struts.multipart.maxSize" value="1000000" />
-    <constant name="struts.multipart.saveDir"
-        value="C:\laragon\www\shopping-training-project\src\main\resources\static\user\images" />
+    <!-- <constant name="struts.multipart.enabled" value="true"/> -->
 
     <package name="default" extends="struts-default">
 
@@ -27,11 +24,11 @@
                 name="GuestInterceptor" />
             <interceptor-stack name="loginSecureStack">
                 <interceptor-ref name="GuestInterceptor" />
-                <!-- <interceptor-ref name="defaultStack" /> -->
+                <interceptor-ref name="defaultStack" />
             </interceptor-stack>
             <interceptor-stack name="authSecureStack">
                 <interceptor-ref name="AuthenticateInterceptor" />
-                <!-- <interceptor-ref name="defaultStack" /> -->
+                <interceptor-ref name="defaultStack" />
             </interceptor-stack>
         </interceptors>
 

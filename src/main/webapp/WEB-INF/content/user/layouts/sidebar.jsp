@@ -30,6 +30,13 @@
                         <p>Products</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/user/customers"
+                        class="nav-link  <s:if test='requestUrl == "customers"'>active</s:if>">
+                        <i class="fas fa-box mr-2"></i>
+                        <p>Customers</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

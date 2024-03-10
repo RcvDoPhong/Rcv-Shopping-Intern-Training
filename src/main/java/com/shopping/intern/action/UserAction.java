@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
@@ -18,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.shopping.intern.model.User;
-import com.shopping.intern.service.User.IUserService;
+import com.shopping.intern.service.user.IUserService;
 
 @Namespace("/user/users")
 @Results({
@@ -28,9 +30,9 @@ import com.shopping.intern.service.User.IUserService;
 @TilesDefinitions({
         @TilesDefinition(name = "users", extend = "masterLayout")
 })
-// @InterceptorRefs({
-//     @InterceptorRef(value = "authSecureStack")
-// })
+@InterceptorRefs({
+    @InterceptorRef(value = "authSecureStack")
+})
 public class UserAction extends ActionSupport {
 
     private HttpServletRequest request = ServletActionContext.getRequest();
@@ -274,14 +276,18 @@ public class UserAction extends ActionSupport {
         return "index";
     }
 
-    @Action("create")
+    @Action(value = "create", interceptorRefs = {
+        @InterceptorRef(value = "defaultStack")
+    })
     public String create() {
         setJsonResponse(this.userService.validate(userRequest, "Create new user Successfully!", "create"));
 
         return SUCCESS;
     }
 
-    @Action("update")
+    @Action(value = "update", interceptorRefs = {
+        @InterceptorRef(value = "defaultStack")
+    })
     public String update() {
         setJsonResponse(this.userService.validate(userRequest, "Update user's info Successfully!", "update"));
 

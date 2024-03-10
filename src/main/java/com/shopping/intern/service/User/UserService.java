@@ -1,12 +1,12 @@
-package com.shopping.intern.service.User;
+package com.shopping.intern.service.user;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.catalina.connector.Response;
 import org.json.JSONObject;
 
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.shopping.intern.component.CustomValidation;
 
 import com.shopping.intern.model.User;
-import com.shopping.intern.repository.User.IUserRepository;
+import com.shopping.intern.repository.user.IUserRepository;
+import com.shopping.intern.request.LoginUserRequest;
 import com.shopping.intern.request.UserCreateUpdateRequest;
 import com.shopping.intern.request.UserLoginRequest;
 
@@ -104,30 +105,76 @@ public class UserService implements IUserService {
         this.userRepo.lockById(userId);
     }
 
-    public boolean checkLogin(UserLoginRequest userLoginRequest) {
+    public void handleFirstRunProject() {
+        List<User> userList = this.findAll(new User());
+        if (userList.isEmpty()) {
+            User admin = new User();
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+            String passwordEncode = encoder.encode("password");
+
+            admin.setUserId(1);
+            admin.setEmail("admin@email.com");
+            admin.setUserName("Admin");
+            admin.setGroupRole("Admin");
+            admin.setIsActive("1");
+            admin.setPassword(passwordEncode);
+            admin.setCreatedAt(getCurrentTimestamp());
+            admin.setUpdatedAt(getCurrentTimestamp());
+
+            this.userRepo.insert(admin);
+        }
+    }
+
+    public ResponseEntity<String> validateLogin(UserLoginRequest userLoginRequest) {
+        JSONObject response = new JSONObject();
+        JSONObject error = new JSONObject();
+
+        LoginUserRequest loginValidateMap = new LoginUserRequest();
+        CustomValidation validate = new CustomValidation();
+
+        boolean validateEmailFail = validate.validateSingleField(loginValidateMap.getValidateMap(),
+                userLoginRequest.getEmail(), "email", response, null);
+
+        boolean validatePasswordFail = validate.validateSingleField(loginValidateMap.getValidateMap(),
+                userLoginRequest.getPassword(), "password", response, null);
+
+        if (validateEmailFail || validatePasswordFail) {
+            error.put("error", response);
+            return new ResponseEntity<>(error.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        boolean checkLoginFail = checkLogin(userLoginRequest, response);
+
+        if (checkLoginFail) {
+            error.put("error", response);
+            return new ResponseEntity<>(error.toString(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+    }
+
+    public boolean checkLogin(UserLoginRequest userLoginRequest, JSONObject response) {
         User user = this.userRepo.findByEmail(userLoginRequest.getEmail());
         if (user != null) {
             if (user.getIsActive().equals(disabledState)) {
-                return false;
+                response.append("status", "User's account has been locked or deleted!");
+                return true;
             }
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
             if (encoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
                 this.handleAfterLogin(user);
-                return true;
+                response.append("message", "Login successfully");
+                response.append("url", "/user/dashboard");
+                return false;
             }
-            this.storeTempValueLoginFail(userLoginRequest);
         }
-        return false;
+        response.append("status", "User's email or password is incorrect");
+        return true;
     }
 
     public void handleAfterLogin(User user) {
         Map<String, Object> session = ActionContext.getContext().getSession();
         session.put("userSession", user);
-    }
-
-    public void storeTempValueLoginFail(UserLoginRequest userLoginRequest) {
-        Map<String, Object> session = ActionContext.getContext().getSession();
-        session.put("email", userLoginRequest.getEmail());
     }
 
     public void handleStoreUser(User userRequest) {

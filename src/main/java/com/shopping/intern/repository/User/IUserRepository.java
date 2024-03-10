@@ -1,4 +1,4 @@
-package com.shopping.intern.repository.User;
+package com.shopping.intern.repository.user;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface IUserRepository {
 
     User findByEmail(String email);
 
-    User findByEmailWithException(String email, long id);
+    User findByEmailWithException(String email, long userId);
 
     void insert(User user);
 
@@ -25,7 +25,7 @@ public interface IUserRepository {
 
     User findByName(String name);
 
-    User findByNameWithException(String name, long id);
+    User findByNameWithException(String name, long userId);
 
-    User find(String value, String column, long id);
+    User find(String value, String column, long userId);
 }

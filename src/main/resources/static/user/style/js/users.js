@@ -12,13 +12,14 @@ const user = {
         $(modal).modal('show');
     },
     createUser: function(targetButton) {
-        user.createUpdateUser("/user/users/create");
+        user.createUpdateUser("/user/users/create", targetButton);
     },
     updateUser: function(targetButton) {
         const userId = $("#userCreationForm").find("#userId").val();
-        user.createUpdateUser("/user/users/update?userId=" + userId);
+        user.createUpdateUser("/user/users/update?userId=" + userId, targetButton);
     },
-    createUpdateUser: function(url) {
+    createUpdateUser: function(url, targetButton) {
+        $(targetButton).attr("disabled", true);
         user.clearError();
 
         const data = $("#userCreationForm").serialize();
@@ -39,22 +40,21 @@ const user = {
                         common.sweetAlertNoButton('Success!!', jsonResponse.message, 'success', common.returnCurrentRoute())
                         break;
                 }
-                console.log(jsonResponse, statusCode)
             },
             error: function (response) {
                 console.log("error", response)
             }
+        }).always(function() {
+            $(targetButton).attr("disabled", false);
         })
     },
     displayError: function(errors) {
         $.each(errors, function (title, value) {
-            console.log(`#${title}`, $("form#userCreationForm").find(`#${title}`), $(`#${title}`));
             $("form#userCreationForm").find(`#${title}`).addClass("is-invalid");
             $(`span#${title}`).html(value);
         })
     },
     clearError: function () {
-        console.log("test")
         $("form#userCreationForm").find(".is-invalid").removeClass("is-invalid");
         $("form#userCreationForm").find("span.validation").empty();
     },
@@ -78,7 +78,6 @@ const user = {
                 $.each(data, function(title, value) {
                     $("form#userCreationForm").find(`input#${title}`).val(value);
                     $("form#userCreationForm").find(`select#${title}`).val(value);
-                    console.log(title, value);
                 })
 
                 $("#submitButton").attr("onclick", "user.updateUser(this)");
