@@ -25,8 +25,6 @@ import com.shopping.intern.service.user.IUserService;
 })
 public class LoginAction extends ActionSupport {
 
-	private static final long serialVersionUID = 1L;
-
 	private ResponseEntity<String> jsonResponse;
 
     private IUserService userService;

@@ -39,8 +39,6 @@ import com.shopping.intern.service.product.IProductService;
 })
 public class ProductAction extends ActionSupport {
 
-	private static final long serialVersionUID = 1L;
-
 	private HttpServletRequest request = ServletActionContext.getRequest();
 
     private String requestUrl = "products";
@@ -279,7 +277,8 @@ public class ProductAction extends ActionSupport {
 
     /* Edit existed Product value */
     @Action(value = "edit", interceptorRefs = {
-            @InterceptorRef(value = "store", params = { "operationMode", "STORE" })
+            @InterceptorRef(value = "store", params = { "operationMode", "STORE" }),
+            @InterceptorRef(value = "defaultStack")
     })
     public String edit() {
         setProductId(request.getParameter("productId"));

@@ -25,25 +25,23 @@ public class AuthenticateInterceptor implements Interceptor {
 
     public String intercept(ActionInvocation invocation) throws Exception {
 
-//        final ActionContext context = invocation.getInvocationContext();
-//        HttpServletRequest request = (HttpServletRequest) context
-//                .get(StrutsStatics.HTTP_REQUEST);
-//        HttpSession session = request.getSession(true);
-//
-//        // // Is there a "user" object stored in the user's HttpSession?
-//        Object email = session.getAttribute(EMAIL_SESSION);
-//        if (email == null) {
-//            // The user has not logged in yet.
-//
-//            /* The user is attempting to log in. */
-//            if (invocation.getAction().getClass().equals(LoginAction.class)) {
-//                return invocation.invoke();
-//            }
-//            return "loginRedirect";
-//        } else {
-//            return invocation.invoke();
-//        }
+        final ActionContext context = invocation.getInvocationContext();
+        HttpServletRequest request = (HttpServletRequest) context
+                .get(StrutsStatics.HTTP_REQUEST);
+        HttpSession session = request.getSession(true);
 
-        return invocation.invoke();
+        // // Is there a "user" object stored in the user's HttpSession?
+        Object email = session.getAttribute(EMAIL_SESSION);
+        if (email == null) {
+            // The user has not logged in yet.
+
+            /* The user is attempting to log in. */
+            if (invocation.getAction().getClass().equals(LoginAction.class)) {
+                return invocation.invoke();
+            }
+            return "loginRedirect";
+        } else {
+            return invocation.invoke();
+        }
     }
 }

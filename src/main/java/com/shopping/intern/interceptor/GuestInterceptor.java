@@ -23,20 +23,18 @@ public class GuestInterceptor implements Interceptor {
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
-//        HttpServletRequest request = (HttpServletRequest) invocation.getInvocationContext()
-//               .get(StrutsStatics.HTTP_REQUEST);
-//
-//        HttpSession session = request.getSession();
-//        Object userSession = session.getAttribute(USER_SESSION);
-//        if (userSession == null) {
-//            if (invocation.getAction().getClass().equals(LoginAction.class)) {
-//                return invocation.invoke();
-//            }
-//            return "loginRedirect";
-//        }
-//        return "homeRedirect";
+        HttpServletRequest request = (HttpServletRequest) invocation.getInvocationContext()
+               .get(StrutsStatics.HTTP_REQUEST);
 
-        return invocation.invoke();
+        HttpSession session = request.getSession();
+        Object userSession = session.getAttribute(USER_SESSION);
+        if (userSession == null) {
+            if (invocation.getAction().getClass().equals(LoginAction.class)) {
+                return invocation.invoke();
+            }
+            return "loginRedirect";
+        }
+        return "homeRedirect";
     }
 
 }

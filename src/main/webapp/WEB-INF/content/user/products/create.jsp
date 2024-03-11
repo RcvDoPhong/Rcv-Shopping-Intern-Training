@@ -36,7 +36,7 @@
         <div class="row col-6 mt-5">
             <div class="d-flex" style="height:300px">
                 <img id="preview" class="rounded float-right img-thumbnail img-fluid"
-                    src="/user/images/products/product_placeholder.png" alt="">
+                    src="/user/images/product_placeholder.png" alt="">
             </div>
             <div class="input-group">
                 <div class="input-group-append">
