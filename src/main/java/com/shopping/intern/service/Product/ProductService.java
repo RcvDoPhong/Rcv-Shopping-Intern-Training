@@ -148,7 +148,7 @@ public class ProductService implements IProductService {
     }
 
     public void handleStoreImage(Product productForm, String fileName, CustomValidation validate) {
-        validate.handleStoreImage(productForm.getUploadImage(), fileName, "/products/");
+        validate.handleStoreImage(productForm.getUploadImage(), fileName, "/");
     }
 
     public String formatProductImageName(Product product) {
@@ -165,7 +165,7 @@ public class ProductService implements IProductService {
         int stringLength = imgFileNameSplitString.length;
         String extension = imgFileNameSplitString[stringLength - 1];
 
-        return String.format("%s_%s_%s.%s", newProductName, randomNumber, timeSave, extension);
+        return String.format("products/%s_%s_%s.%s", newProductName, randomNumber, timeSave, extension);
     }
 
     public int getRandomNumberUsingNextInt(int min, int max) {
