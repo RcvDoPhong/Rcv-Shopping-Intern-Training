@@ -54,6 +54,14 @@
             AND customer_id != #{customerId}
         </if>
     </select>
+    <select id="findByTelNum" resultType="Customer">
+        SELECT <include refid="Base_Column_List" />
+        FROM mst_customers
+        WHERE tel_num=#{telNum}
+        <if test="customerId != 0">
+            AND customer_id != #{customerId}
+        </if>
+    </select>
     <update id="update">
         UPDATE mst_customers SET
         customer_name = #{customerName}, email = #{email}, address = #{address},

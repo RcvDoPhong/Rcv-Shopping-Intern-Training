@@ -98,7 +98,7 @@
                             <tr>
                                 <td>${product.getProductIndex()}</td>
                                 <td data-toggle="tooltip" id="productId" data-html="true"
-                                    title="<img class='img-thumbnail' src='/user/images/products/${product.productImage}'/>"
+                                    title="<img class='img-thumbnail' src='/user/images/${product.productImage}'/>"
                                     onmouseover="tooltip.showContent(this)">
                                     ${product.productId}
                                 </td>

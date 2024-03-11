@@ -22,6 +22,10 @@ public interface ICustomerRepository {
     Customer findByName(String name);
 
     Customer findByNameWithException(String name, long customerId);
+    
+    Customer findByTelNum(String name);
+
+    Customer findByTelNumWithException(String name, long customerId);
 
     Customer find(String value, String column, long id);
 }

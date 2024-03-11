@@ -55,14 +55,20 @@ public class ProductService implements IProductService {
 
     public ResponseEntity<String> getProductAjax(String productId) {
         Product product = this.getProduct(productId);
-
         JSONObject response = new JSONObject();
+        
+        product = product != null ? product : new Product();
+        HttpStatus status = product != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+        
         response.put("productId", product.getProductId());
         response.put("productName", product.getProductName());
         response.put("productImage", product.getProductImage());
         response.put("productPrice", product.getProductPrice());
 
-        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+        response.put("errors", "Product doesn't exists!");
+        response.put("url", "/user/products/");
+        
+        return new ResponseEntity<>(response.toString(), status);
     }
 
     public void handleStoreUser(Product productForm, CustomValidation validate) {
@@ -142,7 +148,7 @@ public class ProductService implements IProductService {
     }
 
     public void handleStoreImage(Product productForm, String fileName, CustomValidation validate) {
-        validate.handleStoreImage(productForm.getUploadImage(), fileName, "\\products\\");
+        validate.handleStoreImage(productForm.getUploadImage(), fileName, "/products/");
     }
 
     public String formatProductImageName(Product product) {

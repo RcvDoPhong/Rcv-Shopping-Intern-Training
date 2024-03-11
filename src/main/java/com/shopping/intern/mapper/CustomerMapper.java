@@ -15,6 +15,8 @@ public interface CustomerMapper {
     Customer findById(long customerId);
 
     Customer findByEmail(String email, long customerId);
+    
+    Customer findByTelNum(String telNum, long customerId);
 
     boolean existByEmail(String email);
 

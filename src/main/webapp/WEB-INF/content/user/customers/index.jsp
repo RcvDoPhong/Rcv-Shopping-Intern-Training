@@ -96,8 +96,7 @@
                     <s:if test="customerList.size() > 0">
                         <s:iterator value="customerList" var="customer">
                             <tr data-id="${customer.customerId}" id="rowCustomer${customer.customerId}">
-                                <form action="/user/customers/update?customerId=${customer.customerId}"
-                                    id="formUpdateUser${customer.customerId}">
+                                <form action="/user/customers/update" id="formUpdateUser${customer.customerId}">
                                     <input type="hidden" name="customerForm.customerId" id="customerId" value="${customer.customerId}">
                                     <td>${customer.customerId}</td>
                                     <td>

@@ -24,7 +24,7 @@ public class CustomValidation {
 
     private ICustomerRepository customerRepo;
 
-    private String imgStorePath = "\\resources\\static\\user\\images";
+    private String imgStorePath = "/resources/static/user/images";
 
     public IUserRepository getUserRepo() {
         return userRepo;

@@ -50,7 +50,7 @@ const customers = {
                 $(row).find(`#${title}`).addClass("is-invalid");
                 $(row).find(`span#${title}`).html(value);
             } else {
-                $(`span#${title}`).html(value);
+                $("form#customerCreationForm").find(`span#${title}`).html(value);
                 $("form#customerCreationForm").find(`#${title}`).addClass("is-invalid");
             }
         })

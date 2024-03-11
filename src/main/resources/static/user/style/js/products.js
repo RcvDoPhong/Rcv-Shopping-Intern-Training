@@ -5,6 +5,7 @@ const products = {
 
         const url = $("#productForm").attr("action");
         const data = new FormData($(`form#productForm`)[0]);
+        console.log($("#uploadImage").val());
 
         $.ajax({
             type: "POST",
@@ -41,5 +42,8 @@ const products = {
     clearError: function () {
         $("form#productForm").find(".is-invalid").removeClass("is-invalid");
         $("form#productForm").find("span.validation").empty();
+    },
+    validateImageFile: function () {
+
     }
 }

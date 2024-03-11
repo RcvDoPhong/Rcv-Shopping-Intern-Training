@@ -11,7 +11,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.shopping.intern.model.User;
 import com.shopping.intern.service.user.IUserService;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })

@@ -12,17 +12,23 @@ const user = {
         $(modal).modal('show');
     },
     createUser: function(targetButton) {
-        user.createUpdateUser("/user/users/create", targetButton);
+        user.createUpdateUser("/user/users/create", targetButton, "create");
     },
     updateUser: function(targetButton) {
         const userId = $("#userCreationForm").find("#userId").val();
-        user.createUpdateUser("/user/users/update?userId=" + userId, targetButton);
+        user.createUpdateUser("/user/users/update", targetButton, "update");
     },
-    createUpdateUser: function(url, targetButton) {
+    createUpdateUser: function(url, targetButton, processType) {
         $(targetButton).attr("disabled", true);
         user.clearError();
+        
+        let data = null;
 
-        const data = $("#userCreationForm").serialize();
+		if (processType === "create") {
+			data = $("#userCreationForm").find(".validate").serialize();
+		} else {
+        	data = $("#userCreationForm").serialize();
+		}
         $.ajax({
             type: "POST",
             url: url,

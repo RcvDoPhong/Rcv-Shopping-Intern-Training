@@ -1,5 +1,6 @@
 const login = {
     loginCheck: function (targetButton) {
+        $(targetButton).attr("disabled", true);
         const form = $("form#loginForm");
         login.clearError();
 
@@ -25,6 +26,8 @@ const login = {
                         break;
                 }
             },
+        }).always(function () {
+            $(targetButton).attr("disabled", false);
         })
     },
     displayError: function(errors) {

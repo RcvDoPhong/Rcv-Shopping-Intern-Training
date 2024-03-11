@@ -35,7 +35,9 @@ import com.shopping.intern.service.user.IUserService;
 })
 public class UserAction extends ActionSupport {
 
-    private HttpServletRequest request = ServletActionContext.getRequest();
+	private static final long serialVersionUID = 1L;
+
+	private HttpServletRequest request = ServletActionContext.getRequest();
 
     private IUserService userService;
 
@@ -280,6 +282,7 @@ public class UserAction extends ActionSupport {
         @InterceptorRef(value = "defaultStack")
     })
     public String create() {
+    	System.out.println(userRequest.getUserId());
         setJsonResponse(this.userService.validate(userRequest, "Create new user Successfully!", "create"));
 
         return SUCCESS;

@@ -34,7 +34,7 @@
     </definition>
 
     <definition name="customers" extends="masterLayout">
-        <put-attribute name="title" value="Update new product" />
+        <put-attribute name="title" value="Customers management" />
         <put-attribute name="body" value="/WEB-INF/content/user/customers/index.jsp" />
     </definition>
 

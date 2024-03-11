@@ -16,7 +16,7 @@
                                     <label class="mt-2">Name</label>
                                 </div>
                                 <div class="col-10">
-                                    <input name="userRequest.userName" id="name" type="text" class="form-control" value=""
+                                    <input name="userRequest.userName" id="name" type="text" class="form-control validate" value=""
                                         placeholder="Type name">
                                     <span name="name" id="name" class="error validation invalid-feedback d-flex"></span>
                                 </div>
@@ -28,7 +28,7 @@
                                     <label class="mt-2">Email</label>
                                 </div>
                                 <div class="col-10">
-                                    <input name="userRequest.email" id="email" type="text" class="form-control" value=""
+                                    <input name="userRequest.email" id="email" type="text" class="form-control validate" value=""
                                         placeholder="Type email">
                                     <span name="email" id="email" class="error validation invalid-feedback d-flex"></span>
                                 </div>
@@ -40,7 +40,7 @@
                                     <label class="mt-2">Group</label>
                                 </div>
                                 <div class="col-md">
-                                    <select class="form-control" name="userRequest.groupRole" id="group">
+                                    <select class="form-control validate" name="userRequest.groupRole" id="group">
                                         <option value="" selected>Select group</option>
                                         <span id="ogSelectValues">
                                             <s:iterator value="groupList" var="group">
@@ -60,7 +60,7 @@
                                     <label class="mt-2">Status</label>
                                 </div>
                                 <div class="col-md">
-                                    <select class="form-control" name="userRequest.isActive" id="status">
+                                    <select class="form-control validate" name="userRequest.isActive" id="status">
                                         <option value="" selected>Select status</option>
                                         <s:iterator begin="0" end="statusList.length - 1" var="index">
                                             <option value="${index}">

@@ -40,8 +40,8 @@
                 <param name="namespace">/user</param>
             </result>
             <result name="homeRedirect" type="redirectAction">
-                <param name="actionName">dashboard</param>
-                <param name="namespace">/user</param>
+                <param name="actionName">${}</param>
+                <param name="namespace">/user/users</param>
             </result>
         </global-results>
 

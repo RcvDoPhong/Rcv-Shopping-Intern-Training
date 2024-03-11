@@ -38,13 +38,13 @@
             <div class="row col-6 mt-5">
                 <div class="d-flex" style="height:300px">
                     <img id="preview" class="rounded float-right img-thumbnail img-fluid"
-                        src="/user/images/products/${productForm.productImage}" alt="">
+                        src="/user/images/${productForm.productImage}" alt="">
                 </div>
                 <div class="input-group">
                     <div class="input-group-append">
                         <button class="btn btn-danger rounded" type="button" id="clearDirectory"
                             data-id="${productForm.productId}"
-                            onclick="imageValidate.clearImageByExistedImage(this)">
+                            onclick="imageValidate.clearImageByExistedImage(this, '#uploadImage')">
                             Remove file
                         </button>
                     </div>

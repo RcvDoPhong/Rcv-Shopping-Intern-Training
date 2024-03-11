@@ -39,7 +39,9 @@ import com.shopping.intern.service.product.IProductService;
 })
 public class ProductAction extends ActionSupport {
 
-    private HttpServletRequest request = ServletActionContext.getRequest();
+	private static final long serialVersionUID = 1L;
+
+	private HttpServletRequest request = ServletActionContext.getRequest();
 
     private String requestUrl = "products";
 
@@ -233,8 +235,7 @@ public class ProductAction extends ActionSupport {
     }
 
     @Action(value = "", interceptorRefs = {
-            @InterceptorRef(value = "store", params = { "operationMode", "RETRIEVE" }),
-            @InterceptorRef(value = "defaultStack")
+            @InterceptorRef(value = "store", params = { "operationMode", "RETRIEVE" })
     })
     @Override
     public String execute() {
@@ -278,8 +279,7 @@ public class ProductAction extends ActionSupport {
 
     /* Edit existed Product value */
     @Action(value = "edit", interceptorRefs = {
-            @InterceptorRef(value = "store", params = { "operationMode", "STORE" }),
-            @InterceptorRef(value = "defaultStack")
+            @InterceptorRef(value = "store", params = { "operationMode", "STORE" })
     })
     public String edit() {
         setProductId(request.getParameter("productId"));
@@ -288,7 +288,13 @@ public class ProductAction extends ActionSupport {
             addActionError("Product ID is invalid");
             return "redirectProductList";
         }
-        setProductForm(this.productService.getProduct(productId));
+        
+        Product product = this.productService.getProduct(productId);
+        if (product == null) {
+        	addActionError("Product ID is invalid");
+            return "redirectProductList";
+        }
+        setProductForm(product);
 
         return "update";
     }

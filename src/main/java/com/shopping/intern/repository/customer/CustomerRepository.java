@@ -53,6 +53,14 @@ public class CustomerRepository implements ICustomerRepository {
     public Customer findByNameWithException(String name, long customerId) {
         return this.customerMapper.findByName(name, customerId);
     }
+    
+    public Customer findByTelNum(String telNum) {
+        return this.customerMapper.findByTelNum(telNum, 0);
+    }
+
+    public Customer findByTelNumWithException(String telNum, long customerId) {
+        return this.customerMapper.findByTelNum(telNum, customerId);
+    }
 
     public Customer find(String value, String column, long customerId) {
         switch (column) {
@@ -70,6 +78,12 @@ public class CustomerRepository implements ICustomerRepository {
                     return this.findByEmail(value);
                 }
                 return this.findByEmailWithException(value, customerId);
+                
+            case "tel_num":
+                if (customerId == 0) {
+                    return this.findByTelNum(value);
+                }
+                return this.findByTelNumWithException(value, customerId);
 
             default:
                 return null;

@@ -39,8 +39,10 @@ public class CustomerAction extends ActionSupport {
     private final ICustomerService customerService;
 
     private Customer customerForm;
+    
+    private long customerId;
 
-    private int page;
+	private int page;
 
     private int totalPage;
 
@@ -169,6 +171,14 @@ public class CustomerAction extends ActionSupport {
     public void setPerPage(int perPage) {
         this.perPage = perPage;
     }
+    
+    public long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
+	}
 
     public void handleSearchUrl() {
         Customer tempCustomerValue = new Customer();
@@ -212,7 +222,7 @@ public class CustomerAction extends ActionSupport {
 
     @Action("getCustomer")
     public String get() {
-        long customerId = Long.parseLong(request.getParameter("customerId"));
+    	setCustomerId(Long.parseLong(request.getParameter("customerId")));
         setJsonResponse(this.customerService.getCustomerAjax(customerId));
 
         return SUCCESS;

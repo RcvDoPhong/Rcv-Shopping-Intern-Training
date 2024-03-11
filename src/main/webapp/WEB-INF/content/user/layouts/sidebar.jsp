@@ -9,13 +9,13 @@
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="/user/dashboard"
                         class="nav-link <s:if test='requestUrl == "dashboard"'>active</s:if>">
                         <i class="fas fa-home mr-2"></i>
                         <p>Dashboard</p>
                     </a>
-                </li>
+                </li>  -->
                 <li class="nav-item">
                     <a href="/user/users"
                         class="nav-link  <s:if test='requestUrl == "users"'>active</s:if>">

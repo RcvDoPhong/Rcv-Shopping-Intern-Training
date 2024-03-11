@@ -164,7 +164,7 @@ public class UserService implements IUserService {
             if (encoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
                 this.handleAfterLogin(user);
                 response.append("message", "Login successfully");
-                response.append("url", "/user/dashboard");
+                response.append("url", "/user/users/");
                 return false;
             }
         }

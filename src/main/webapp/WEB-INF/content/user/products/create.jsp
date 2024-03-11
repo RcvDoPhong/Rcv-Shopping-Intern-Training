@@ -41,7 +41,7 @@
             <div class="input-group">
                 <div class="input-group-append">
                     <button class="btn btn-danger rounded" type="button" id="clearDirectory"
-                        onclick="imageValidate.clearImage('uploadImage')">
+                        onclick="imageValidate.clearImage('#uploadImage')">
                         Remove file
                     </button>
                 </div>
